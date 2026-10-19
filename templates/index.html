@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SkinCare AI | Your Natural Glow</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='skincare-logo.png') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green: #214b3b;
+            --green-light: #438263;
+            --gold: #b99563;
+            --text: #48564d;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background: #fffdf9;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            width: calc(100% - 80px);
+            max-width: 1440px;
+            min-height: 76px;
+            margin: 12px auto 12px;
+            padding: 12px 22px 12px 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(70, 130, 95, 0.16);
+            border-radius: 28px;
+
+            box-shadow: 0 10px 35px rgba(38, 73, 49, 0.10);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+
+            position: relative;
+            z-index: 100;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #245b40;
+            text-decoration: none;
+            font-size: 25px;
+            font-weight: 750;
+            letter-spacing: -0.7px;
+            white-space: nowrap;
+        }
+
+        .brand-icon {
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            border-radius: 15px;
+            background: #e8f4e9;
+            color: #40875b;
+            font-size: 25px;
+        }
+
+        .brand b {
+            color: #5b9b70;
+        }
+
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            padding: 3px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #45564a;
+            font-size: 15px;
+            font-weight: 550;
+            padding: 12px 17px;
+            border-radius: 18px;
+            transition: all 0.25s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #edf6ee;
+            color: #286644;
+        }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 19px;
+            border-radius: 19px;
+            background: #438b62;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 650;
+            white-space: nowrap;
+            box-shadow: 0 5px 14px rgba(67, 139, 98, 0.18);
+            transition: all 0.25s ease;
+        }
+
+        .nav-cta:hover {
+            background: #2f704c;
+            transform: translateY(-2px);
+        }
+
+        .nav-cta span {
+            font-size: 18px;
+        }
+
+        /* TABLET AND MOBILE */
+        @media (max-width: 900px) {
+            .navbar {
+                width: calc(100% - 28px);
+                padding: 15px 18px;
+                flex-wrap: wrap;
+                border-radius: 24px;
+            }
+
+            .brand {
+                font-size: 22px;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding-top: 8px;
+                border-top: 1px solid #edf1ed;
+            }
+
+            .nav-link {
+                padding: 10px 13px;
+                white-space: nowrap;
+            }
+
+            .nav-cta {
+                padding: 12px 14px;
+            }
+        }
+
+        /* HERO BACKGROUND */
+        .hero {
+            min-height: 690px;
+            padding: 65px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            isolation: isolate;
+
+            background-image: url("/static/background.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Soft panel so text remains readable */
+        .hero-content {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            width: 100%;
+            max-width: 680px;
+            padding: 38px 35px;
+            margin: 0 auto;
+            text-align: center;
+
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 18px;
+            box-shadow: 0 15px 50px rgba(47, 65, 51, 0.08);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Soft skincare logo watermark inside the white hero card */
+        .hero-content::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background-image: url("/static/skincare-logo.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: min(460px, 72%);
+
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Keep all text and buttons above the watermark */
+        .hero-content>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Softer watermark on mobile */
+        @media (max-width: 760px) {
+            .hero-content::before {
+                background-size: min(260px, 78%);
+                opacity: 0.045;
+            }
+        }
+
+        .eyebrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            color: var(--green-light);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            margin-bottom: 23px;
+        }
+
+        .eyebrow::before,
+        .eyebrow::after {
+            content: "";
+            display: block;
+            width: 25px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--green);
+            font-size: clamp(42px, 5vw, 65px);
+            font-weight: 600;
+            letter-spacing: -1.3px;
+            line-height: 1.16;
+            margin-bottom: 22px;
+        }
+
+        h1 em {
+            color: var(--green-light);
+            font-weight: 500;
+        }
+
+        .hero-description {
+            max-width: 520px;
+            margin: 0 auto 29px;
+            color: #56635a;
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        /* BUTTONS */
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .button {
+            min-height: 49px;
+            padding: 14px 23px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.25s ease;
+        }
+
+        .button-primary {
+            color: white;
+            background: var(--green);
+            border: 1px solid var(--green);
+        }
+
+        .button-primary:hover {
+            background: var(--green-light);
+            border-color: var(--green-light);
+            transform: translateY(-2px);
+        }
+
+        .button-secondary {
+            color: var(--green);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #b7c8ba;
+        }
+
+        .button-secondary:hover {
+            border-color: var(--green);
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .trust-line {
+            margin-top: 25px;
+            color: #69776d;
+            font-size: 12px;
+        }
+
+        .trust-line span {
+            color: var(--gold);
+            margin-right: 5px;
+        }
+
+        /* FEATURES */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 22px;
+            padding: 38px 8%;
+            background: #fffdf9;
+            border-top: 1px solid #eee8df;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 15px 18px;
+        }
+
+        .feature-icon {
+            color: var(--green-light);
+            font-size: 23px;
+            margin-bottom: 12px;
+        }
+
+        .feature h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--green);
+            margin-bottom: 9px;
+        }
+
+        .feature p {
+            color: #748078;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 23px 15px;
+            text-align: center;
+            background: #f7f5ef;
+            border-top: 1px solid #eee8df;
+            color: #7b837c;
+            font-size: 12px;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 760px) {
+            .navbar {
+                gap: 12px;
+                margin-top: 12px;
+            }
+
+            .brand {
+                font-size: 19px;
+            }
+
+            .brand-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .nav-cta {
+                font-size: 12px;
+                gap: 6px;
+            }
+        }
+
+        .hero {
+            min-height: 650px;
+            padding: 35px 16px;
+            background-position: center;
+        }
+
+        .hero-content {
+            padding: 30px 19px;
+            background: rgba(255, 255, 255, 0.87);
+            border-radius: 14px;
+        }
+
+        .eyebrow {
+            font-size: 9px;
+            letter-spacing: 1.6px;
+        }
+
+        h1 {
+            font-size: clamp(37px, 9vw, 49px);
+            letter-spacing: -0.8px;
+        }
+
+        .hero-description {
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .button {
+            width: 100%;
+        }
+
+        .features {
+            grid-template-columns: 1fr;
+            gap: 8px;
+            padding: 25px 7%;
+        }
+
+        .feature {
+            padding: 16px 10px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="/" class="brand">
+            <span class="brand-icon">
+                <img src="{{ url_for('static', filename='skincare-logo.png') }}" alt="SkinCare AI logo">
+            </span>
+            <span>SkinCare <b>AI</b></span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/" class="nav-link active">Home</a>
+            <a href="/analysis" class="nav-link">Analysis</a>
+            <a href="/analysis" class="nav-link">Recommendations</a>
+            <a href="/shop" class="nav-link">Shop</a>
+        </div>
+
+        <a href="/analysis" class="nav-cta">
+            Start Analysis <span>↗</span>
+        </a>
+    </nav>
+
+    <!-- MAIN HERO -->
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+
+                <div class="eyebrow">
+                    Your personal skincare companion
+                </div>
+
+                <h1>
+                    Your Skin.<br>
+                    <em>Your Natural Glow.</em>
+                </h1>
+
+                <p class="hero-description">
+                    Discover a skincare routine that feels made for you.
+                    Explore your skin's visible characteristics, get
+                    personalized product suggestions, and find your
+                    everyday skincare essentials.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="{{ url_for('analysis') }}" class="button button-primary">
+                        Start Skin Analysis <span>→</span>
+                    </a>
+
+                    <a href="{{ url_for('shop') }}" class="button button-secondary">
+                        Explore Products
+                    </a>
+                </div>
+
+                <p class="trust-line">
+                    <span>✦</span>
+                    Personalized insights. Thoughtful skincare.
+                </p>
+
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+        <section class="features">
+
+            <div class="feature">
+                <div class="feature-icon">✧</div>
+                <h2>Skin Analysis</h2>
+                <p>
+                    Explore visible skin characteristics using
+                    your uploaded image.
+                </p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">❋</div>
+                <h2>Personalized Care</h2>
+                <p>
+                    Find skincare suggestions based on your
+                    skin profile and preferences.
+                </p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">◇</div>
+                <h2>Shop Your Routine</h2>
+                <p>
+                    Browse skincare essentials and discover
+                    products for your daily routine.
+                </p>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        &copy; 2026 SkinCare AI |
+        Your Skin, Your Natural Glow
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+id	product_name	category	collection	skin_type	concern	price	ingredients	image	description	color
+1	Peach & AHA Brightening Gel	Cleanser	Citrus Glow Care	All	Pigmentation & dullness	499	AHA, Peach extract	product_001.jpeg		peach
+2	Ultra-Hydrating Gel Cleanser	Cleanser	Aqua Hydration Care	Dry/Normal	Dehydration	449	Hyaluronic Acid	product_002.jpeg		aqua
+3	Cica Clarifying Gel Cleanser	Cleanser	Fresh Botanical Care	Oily/Combination	Acne-prone skin	449	BHA, Tea Tree, Cica	product_003.jpeg		green
+6	Peach & AHA Gel Cleanser	Cleanser	Citrus Glow Care	All	Pigmentation & brightening	499	AHA, Peach	product_006.jpeg		peach
+7	Daily Hydration & Strength Hair Mask	Hair Care	Aqua Hydration Care	All	Dry/damaged hair	599	Rice Water, Macadamia Nut Oil	product_007.jpeg		peach
+8	Anti-Dandruff Hair Mask	Hair Care	Fresh Botanical Care	All	Dandruff & itchy scalp	549	Hemp, Sage	product_008.jpeg		green
+9	Anti-Frizz Shampoo	Shampoo	Aqua Hydration Care	All	Frizz & dryness	399	Argan Oil, Hyaluronic Acid	product_009.jpeg		aqua
+10	Anti-Dandruff Conditioner	Conditioner	Fresh Botanical Care	All	Dandruff-prone scalp	399	Hemp, Sage	product_010.jpeg		green
+11	Anti-Frizz Conditioner	Conditioner	Aqua Hydration Care	All	Frizz & dryness	399	Argan Oil, Hyaluronic Acid	product_011.jpeg		aqua
+12	Lactic Acid + Moroccan Silk Body Scrub	Body Scrub	Citrus Glow Care	All	Rough texture	499	Lactic Acid, Dead Sea Salt, Moroccan Silk	product_012.jpeg		pink
+13	Barrier Repair Hyaluronic Body Lotion	Body Lotion	Aqua Hydration Care	Dry/Normal	Dryness	449	Hyaluronic Acid	product_013.jpeg		aqua
+14	Watermelon Cool Glycolic Body Scrub	Body Scrub	Fresh Botanical Care	All	Rough texture	499	Glycolic Acid, Watermelon	product_014.jpeg		pink
+15	Watermelon Cool Glycolic Refresh Shower Gel	Shower Gel	Fresh Botanical Care	All	Gentle cleansing	349	Glycolic Acid, Watermelon	product_015.jpeg		pink
+16	Barrier Repair Shower Gel	Shower Gel	Aqua Hydration Care	Dry/Normal	Dryness	349	Barrier-supporting formula	product_016.jpeg		aqua
+17	Cica + Salicylic Acid Body Shower Gel	Shower Gel	Fresh Botanical Care	Oily/Combination	Body acne & oiliness	399	Cica, Salicylic Acid, Niacinamide	product_017.jpeg		green
+18	Peach Cica & Rice Moisturizer	Moisturizer	Citrus Glow Care	All	Hydration & glow	549	Peach, Cica, Rice	product_018.jpeg		peach
+19	Cica & Niacinamide Moisturizer	Moisturizer	Fresh Botanical Care	Oily/Combination	Acne & redness	549	Cica, Niacinamide	product_019.jpeg		green
+20	Peach & AHA Serum	Serum	Citrus Glow Care	All	Pigmentation & brightening	699	Peach, AHA	product_020.jpeg		green
+21	Pearl & Rice Serum	Serum	Pure Radiance Care	All	Brightening & hydration	699	Pearl Extract, Rice	product_021.jpeg		gold
+22	Ultra-Hydrating Hyaluronic Acid Serum	Serum	Aqua Hydration Care	Dry/Normal	Deep hydration & plumping	699	Hyaluronic Acid	product_022.jpeg		aqua
+23	Tinted Sunscreen SPF 50+ - Porcelain	Sunscreen	Pure & Gentle Care	All	Daily UV protection	599	UV filters	product_023.jpeg		gold
+24	Tinted Sunscreen SPF 50+ - Ivory	Sunscreen	Pure & Gentle Care	All	Daily UV protection	599	UV filters	product_024.jpeg		gold
+25	Super Vitamin Oil Serum	Serum	Citrus Glow Care	All	Brightening & antioxidant care	749	Sea Buckthorn	product_025.jpeg		peach
+26	Peach & AHA Premium Sheet Mask	Sheet Mask	Citrus Glow Care	All	Brightening & exfoliating	199	Peach, AHA	product_026.jpeg		peach
+27	Under Eye Cream	Eye Care	Aqua Hydration Care	All	Under-eye dryness & tired look	499	Caffeine, Peptide, Hyaluronic Acid	product_027.jpeg		gold
+28	Deep Collagen Glow Overnight Mask	Overnight Mask	Pure Radiance Care	All	Firming & glow	599	Collagen	product_028.jpeg		gold
+29	Hyaluronic Acid & Water Premium Sheet Mask	Sheet Mask	Aqua Hydration Care	All	Hydration & plumping	199	Hyaluronic Acid, Water	product_029.jpeg		aqua
+30	Rice & Probiotics Premium Sheet Mask	Sheet Mask	Pure Radiance Care	All	Balancing & soothing	199	Rice, Probiotics	product_030.jpeg		gold
+31	Cica & Aloe Premium Sheet Mask	Sheet Mask	Fresh Botanical Care	All	Acne-prone & soothing care	199	Cica, Aloe	product_031.jpeg		green
+32	Blueberry Glow Clay Mask	Clay Mask	Citrus Glow Care	All	Glow & hydration	449	Niacinamide, Blueberry	product_032.jpeg		pink
+33	Acne Clay Mask	Clay Mask	Fresh Botanical Care	Oily/Combination	Acne & oil control	449	Salicylic Acid, Cica, Aloe	product_033.jpeg		green
+34	Cica & Aloe Toner	Toner	Fresh Botanical Care	All	Pore care & soothing	399	Cica, Aloe	product_034.jpeg		green
+35	Hyaluronic Acid Toner	Toner	Aqua Hydration Care	Dry/Normal	Hydration & brightening	399	Hyaluronic Acid	product_035.jpeg		aqua
+36	Peach & AHA Toner	Toner	Citrus Glow Care	All	Brightening & exfoliating	399	Peach, AHA	product_036.jpeg		peach
+37	Rice & Probiotics Toner	Toner	Pure Radiance Care	All	Brightening & balancing	399	Rice, Probiotics	product_037.jpeg		gold
+38	Vitamin C & AHA Toner	Toner	Citrus Glow Care	All	Brightening & exfoliating	449	Vitamin C, AHA	product_038.jpeg		peach
+39	Watermelon Cool Clay Mask	Clay Mask	Fresh Botanical Care	All	Pigmentation & dark spots	449	Kojic Acid, Rice Water	product_039.jpeg		gold
+40	Day Protection Sunscreen - Rice & Probiotics SPF 50+	Sunscreen	Pure Radiance Care	All	Daily UV protection	599	Rice, Probiotics	product_040.jpeg		gold
+41	Day Protection Sunscreen - Cica & Aloe SPF 50+	Sunscreen	Fresh Botanical Care	All	Daily UV protection	599	Cica, Aloe	product_041.jpeg		green
+42	Cica Repair Sunscreen SPF 50+	Sunscreen	Fresh Botanical Care	All	Daily UV protection	599	Cica	product_042.jpeg		green
+43	Ultra-Hydrating H2O Sunscreen SPF 50+	Sunscreen	Aqua Hydration Care	All	Hydration & UV protection	599	Hydrating formula	product_043.jpeg		aqua
+44	Rice Ceramide Sunscreen SPF 50+	Sunscreen	Pure Radiance Care	All	Barrier support & UV protection	599	Rice, Ceramides	product_044.jpeg		gold
+45	ClearSkin Acne Control Cleanser	Cleanser	Skin Concern Care	Oily, Combination	Acne, Oiliness	449	Salicylic Acid, Tea Tree Extract	product_045.jpeg	Acne-prone skin ke liye cleanser	green
+46	CalmShield Redness Relief Moisturizer	Moisturizer	Skin Concern Care	Sensitive, All	Redness, Sensitive skin	549	Centella Asiatica, Ceramide Complex	product_046.jpeg	Sensitive skin ko soothe aur moisturize karne ke liye	pink
+47	ClearSkin GlowTone BrightEyes CalmShield	Eye Care	Skin Concern Care	All	Dark circles, Under-eye care	499	Caffeine, Hyaluronic Acid	product_047.jpeg	Dark circles aur under-eye care ke liye cream	pink
+48	GlowTone Dark Spot Serum	Serum	Skin Concern Care	All	Dark spots, Uneven tone	699	Vitamin C, Niacinamide	product_048.jpeg	Dark spots aur uneven skin tone ke liye serum	peach
+49	BrightEyes Under-Eye Cream	Eye Care	Skin Concern Care	All	Dark circles, Under-eye care	499	Caffeine, Hyaluronic Acid	product_049.jpeg	Dark circles aur under-eye care ke liye cream	pink
+50	SoulSkin Strawberry Lip Balm	Lip Care	Lip Care	Dry lips	Strawberry, Hydration	199	Shea Butter, Vitamin E	product_050.jpeg	Strawberry lip balm for soft lips	brown
+51	SoulSkin Peach Lip Balm	Lip Care	Lip Care	Dry lips	Peach, Hydration	199	Shea Butter, Vitamin E	product_051.jpeg	Peach lip balm for daily moisture	brown
+52	SoulSkin Chocolate Lip Balm	Lip Care	Lip Care	Dry lips	Chocolate, Hydration	199	Cocoa Butter, Vitamin E	product_052.jpeg	Chocolate lip balm for soft lips	brown
+53	SoulSkin Warm Nude SPF 50+ Lip Balm	Lip Care	Lip Care	All	UV protection, Dry lips	249	Shea Butter, Vitamin E	product_053.jpeg	Warm nude tinted lip balm with SPF 50+	brown
+54	SoulSkin Peach Shimmer SPF 50+ Lip Balm	Lip Care	Lip Care	All	UV protection, Dry lips	249	Shea Butter, Vitamin E	product_054.jpeg	Peach shimmer lip balm with SPF 50+	brown
+55	SoulSkin Cherry Lip Balm	Lip Care	Lip Care	Dry lips	Cherry, Hydration	199	Shea Butter, Vitamin E	product_055.jpeg	Cherry lip balm for moisturized lips	brown
+56	SoulSkin Plush Pink SPF 50+ Lip Balm	Lip Care	Lip Care	All	UV protection, Dry lips	249	Shea Butter, Vitamin E	product_056.jpeg	Plush pink tinted lip balm with SPF 50+	brown

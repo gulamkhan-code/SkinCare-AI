@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bag | SkinCare AI</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='skincare-logo.png') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --green: #24513f;
+            --fresh: #438e68;
+            --pale: #d3f4d3;
+            --text: #29483b;
+            --muted: #718077;
+            --border: #e1ebe1;
+        }
+
+        body {
+            background: radial-gradient(ellipse at top left, #e9f2df 0%, transparent 36%),
+                radial-gradient(ellipse at bottom right, #e5f2e9 0%, transparent 35%),
+                #fcfcf9;
+            ;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Curved floating navbar */
+        header {
+            width: calc(100% - 48px);
+            max-width: 1500px;
+            min-height: 78px;
+            margin: 14px auto;
+            padding: 14px 26px;
+            background: rgba(255, 255, 255, 0.97);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: 0 8px 28px rgba(36, 81, 63, 0.07);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            color: var(--green);
+            font-size: 25px;
+            font-weight: 750;
+        }
+
+        header a {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 650;
+            padding: 12px 18px;
+            border-radius: 18px;
+            transition: 0.2s ease;
+        }
+
+        header a:hover {
+            background: var(--pale);
+        }
+
+        /* Main cart area */
+        main {
+            max-width: 1150px;
+            margin: 48px auto;
+            padding: 0 24px;
+        }
+
+        h1 {
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: clamp(32px, 4vw, 44px);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        /* Product list and summary */
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 1.55fr 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .cart-items,
+        .summary {
+            background: #fff;
+            padding: 25px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            box-shadow: 0 12px 35px rgba(36, 81, 63, 0.06);
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 17px;
+            padding: 18px 0;
+            border-bottom: 1px solid #edf1e9;
+        }
+
+        .cart-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 112px;
+            height: 120px;
+            object-fit: contain;
+            background: #f3f7ef;
+            border: 1px solid #edf1e9;
+            border-radius: 17px;
+            flex-shrink: 0;
+        }
+
+        .item-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-name {
+            color: var(--green);
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 9px;
+        }
+
+        .item-price {
+            color: var(--fresh);
+            font-weight: 750;
+            margin-bottom: 13px;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 12px;
+        }
+
+        .quantity button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #d5e4d5;
+            background: #f5faf4;
+            color: var(--green);
+            border-radius: 11px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quantity button:hover {
+            background: var(--green);
+            color: white;
+        }
+
+        .remove,
+        .clear {
+            border: none;
+            background: transparent;
+            color: #a75d58;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 5px 0;
+        }
+
+        .remove:hover,
+        .clear:hover {
+            text-decoration: underline;
+        }
+
+        /* Order summary */
+        .summary {
+            position: sticky;
+            top: 22px;
+        }
+
+        .summary h2 {
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: 25px;
+            margin-bottom: 24px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 17px 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .total {
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            color: var(--green);
+            font-size: 18px;
+            font-weight: 750;
+        }
+
+        .checkout,
+        .shop-button {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            border: none;
+            background: var(--green);
+            color: white;
+            padding: 16px;
+            border-radius: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            margin-top: 18px;
+            transition: 0.2s ease;
+        }
+
+        .checkout:hover,
+        .shop-button:hover {
+            background: var(--fresh);
+            transform: translateY(-1px);
+        }
+
+        .note {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+            margin-top: 15px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 55px 18px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            box-shadow: 0 12px 35px rgba(36, 81, 63, 0.05);
+        }
+
+        .empty h2 {
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: 27px;
+            margin-bottom: 12px;
+        }
+
+        .empty p {
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .shop-button {
+            width: auto;
+            padding: 14px 24px;
+        }
+
+        @media (max-width: 760px) {
+            header {
+                width: calc(100% - 20px);
+                padding: 16px;
+                border-radius: 23px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            header a {
+                font-size: 13px;
+                padding: 10px;
+            }
+
+            main {
+                margin: 32px auto;
+                padding: 0 15px;
+            }
+
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .summary {
+                position: static;
+            }
+
+            .cart-items,
+            .summary {
+                padding: 18px;
+                border-radius: 21px;
+            }
+
+            .item-image {
+                width: 88px;
+                height: 100px;
+            }
+        }
+
+        /* Fixed SkinCare AI logo watermark */
+        .fixed-logo-watermark {
+            position: fixed;
+            top: 32%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: min(360px, 72vw);
+            aspect-ratio: 1 / 1;
+
+            background-image: url("/static/skincare-logo.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Keep cart content above the logo */
+        header,
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Let the subtle watermark show through cart panels */
+        .cart-items,
+        .summary,
+        .empty {
+            background: rgba(255, 255, 255, 0.91);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 760px) {
+            .fixed-logo-watermark {
+                width: min(260px, 72vw);
+                opacity: 0.04;
+            }
+        }
+
+        /* SkinCare AI navbar logo */
+        .logo,
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fixed-logo-watermark" aria-hidden="true"></div>
+    <header>
+        <div class="logo">
+            <img class="brand-logo" src="{{ url_for('static', filename='skincare-logo.png') }}" alt="SkinCare AI logo">
+            SkinCare AI
+        </div>
+        <a href="/shop">← Continue Shopping</a>
+    </header>
+
+    <main>
+        <h1>My Bag 🛍️</h1>
+        <p class="subtitle">Your skincare favourites, all in one place.</p>
+
+        <div id="cartContent"></div>
+    </main>
+
+    <script>
+        const cartContent = document.getElementById("cartContent");
+
+        function getCart() {
+            try {
+                const data = JSON.parse(
+                    localStorage.getItem("skincareBag") || "[]"
+                );
+                return Array.isArray(data) ? data : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem("skincareBag", JSON.stringify(cart));
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, function (char) {
+                return {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                }[char];
+            });
+        }
+
+        function renderCart() {
+            const cart = getCart();
+
+            if (cart.length === 0) {
+                cartContent.innerHTML = `
+                <div class="empty">
+                    <h2>Your bag is waiting 💚</h2>
+                    <p>You haven't added any products yet.</p>
+                    <a class="shop-button" href="/shop">Explore Beauty Shop</a>
+                </div>
+            `;
+                return;
+            }
+
+            let subtotal = 0;
+            let allPricesAvailable = true;
+            let totalItems = 0;
+
+            const itemHTML = cart.map((item, index) => {
+                const quantity = Math.max(1, Number(item.quantity) || 1);
+                const rawPrice = String(item.price ?? "").replace(/[₹,\s]/g, "");
+                const price = Number(rawPrice);
+
+                totalItems += quantity;
+
+                const hasPrice = rawPrice !== "" && Number.isFinite(price) && price >= 0;
+
+                if (hasPrice) {
+                    subtotal += price * quantity;
+                } else {
+                    allPricesAvailable = false;
+                }
+
+                const priceText = hasPrice
+                    ? "₹" + price.toLocaleString("en-IN")
+                    + " × " + quantity
+                    + " = ₹" + (price * quantity).toLocaleString("en-IN")
+                    : "Price coming soon";
+
+                const imageHTML = item.image
+                    ? `<img class="item-image" src="${escapeHTML(item.image)}"
+                       alt="${escapeHTML(item.name)}"
+                       onerror="this.style.visibility='hidden'">`
+                    : `<div class="item-image"></div>`;
+
+                return `
+                <div class="cart-item">
+                    ${imageHTML}
+
+                    <div class="item-details">
+                        <div class="item-name">${escapeHTML(item.name)}</div>
+                        <div class="item-price">${priceText}</div>
+
+                        <div class="quantity">
+                            <button type="button" onclick="changeQuantity(${index}, -1)">−</button>
+                            <span>${quantity}</span>
+                            <button type="button" onclick="changeQuantity(${index}, 1)">+</button>
+                        </div>
+
+                        <button type="button" class="remove"
+                            onclick="removeItem(${index})">Remove</button>
+                    </div>
+                </div>
+            `;
+            }).join("");
+
+            cartContent.innerHTML = `
+            <div class="cart-layout">
+                <section class="cart-items">
+                    ${itemHTML}
+                    <button class="clear" type="button" onclick="clearCart()">
+                        Clear Bag
+                    </button>
+                </section>
+
+                <aside class="summary">
+                    <h2>Order Summary</h2>
+
+                    <div class="summary-row">
+                        <span>Items</span>
+                        <span>${totalItems}</span>
+                    </div>
+
+                    <div class="summary-row total">
+                        <span>Subtotal</span>
+                        <span>${allPricesAvailable
+                    ? "₹" + subtotal.toLocaleString("en-IN")
+                    : "Price pending"}</span>
+                    </div>
+
+                    <p class="note">
+                        Delivery charges and final prices will be confirmed
+                        when checkout is implemented.
+                    </p>
+
+                    <button class="checkout" type="button"
+                          onclick="window.location.href='/checkout'">
+                        Continue to Checkout
+                    </button>
+
+                    <p class="note">
+                        Demo checkout only. No order or payment is processed.
+                    </p>
+                </aside>
+            </div>
+        `;
+        }
+
+        function changeQuantity(index, change) {
+            const cart = getCart();
+            if (!cart[index]) return;
+
+            cart[index].quantity = (Number(cart[index].quantity) || 1) + change;
+
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+
+            saveCart(cart);
+            renderCart();
+        }
+
+        function removeItem(index) {
+            const cart = getCart();
+            cart.splice(index, 1);
+            saveCart(cart);
+            renderCart();
+        }
+
+        function clearCart() {
+            saveCart([]);
+            renderCart();
+        }
+
+        function checkoutDemo() {
+            alert("Checkout is not connected yet. This is a project demo.");
+        }
+
+        renderCart();
+    </script>
+
+</body>
+
+</html>

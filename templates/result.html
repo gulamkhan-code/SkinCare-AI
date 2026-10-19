@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Skin Results | SkinCare AI</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='skincare-logo.png') }}">
+
+    <style>
+        :root {
+            --green-dark: #24513f;
+            --green: #438e68;
+            --green-soft: #edf5ed;
+            --aqua: #e9f7f3;
+            --gold: #b79a5b;
+            --ink: #26352d;
+            --muted: #718077;
+            --border: #e1ebe1;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background:
+                radial-gradient(ellipse at top left, #e9f2df 0%, transparent 36%),
+                radial-gradient(ellipse at bottom right, #e5f2e9 0%, transparent 35%),
+                #fcfcf9;
+        }
+
+        /* NAVBAR */
+        nav {
+            position: sticky;
+            top: 12px;
+            z-index: 10;
+            width: min(1180px, calc(100% - 36px));
+            margin: 12px auto 0;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(36, 81, 63, .08);
+            backdrop-filter: blur(14px);
+        }
+
+        .logo {
+            color: var(--green-dark);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        nav a {
+            color: var(--green-dark);
+            text-decoration: none;
+            font-weight: 700;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: #f8fbf7;
+            transition: .2s;
+        }
+
+        nav a:hover {
+            background: var(--green-soft);
+            transform: translateY(-1px);
+        }
+
+        /* MAIN LAYOUT */
+        .container {
+            max-width: 1160px;
+            margin: 38px auto 65px;
+            padding: 0 22px;
+        }
+
+        .page-heading {
+            text-align: center;
+            margin: 0 auto 34px;
+            padding: 24px 10px 12px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            color: var(--green-dark);
+            background: var(--green-soft);
+            border: 1px solid #dcebdd;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            color: var(--green-dark);
+            font-family: Georgia, serif;
+            font-size: clamp(30px, 4.2vw, 46px);
+            line-height: 1.15;
+            letter-spacing: -.8px;
+            margin: 0 0 14px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            line-height: 1.8;
+            max-width: 620px;
+            margin: 0 auto;
+            font-size: 15px;
+        }
+
+        /* WHITE PANELS */
+        .panel {
+            background: rgba(255, 255, 255, .96);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 12px 34px rgba(36, 81, 63, .065);
+            margin-bottom: 25px;
+        }
+
+        .panel h2 {
+            color: var(--green-dark);
+            font-family: Georgia, serif;
+            font-size: 25px;
+            letter-spacing: -.3px;
+            margin: 0 0 11px;
+        }
+
+        .section-intro {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0 0 23px;
+        }
+
+        /* PROFILE */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 22px;
+        }
+
+        .profile-item {
+            background: linear-gradient(135deg, #f2f8f1, #f0f9f7);
+            border: 1px solid #e4eee3;
+            border-radius: 17px;
+            padding: 18px;
+            min-width: 0;
+        }
+
+        .profile-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .profile-value {
+            color: var(--green-dark);
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .face-photo {
+            display: block;
+            width: 100%;
+            max-width: 280px;
+            max-height: 300px;
+            object-fit: cover;
+            border: 5px solid white;
+            outline: 1px solid var(--border);
+            border-radius: 22px;
+            margin: 22px auto 0;
+            box-shadow: 0 10px 26px rgba(36, 81, 63, .12);
+        }
+
+        /* PRODUCT CARDS */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            margin-top: 25px;
+        }
+
+        .product-card {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 5px 18px rgba(36, 81, 63, .035);
+            transition: transform .22s, box-shadow .22s, border-color .22s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #c9dfcd;
+            box-shadow: 0 16px 32px rgba(36, 81, 63, .11);
+        }
+
+        .product-image-wrap {
+            height: 225px;
+            padding: 16px;
+            background: linear-gradient(145deg, #f5faf4, #eef8f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform .25s;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.035);
+        }
+
+        .image-placeholder {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .product-content {
+            padding: 19px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-name {
+            color: var(--green-dark);
+            font-size: 17px;
+            line-height: 1.45;
+            font-weight: 800;
+            margin: 0 0 10px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--green);
+            margin-bottom: 19px;
+        }
+
+        .small-heading {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--green-dark);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 7px;
+        }
+
+        .product-purpose {
+            color: #66736a;
+            font-size: 13px;
+            line-height: 1.75;
+            margin: 0 0 18px;
+        }
+
+        .ingredient-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 9px;
+        }
+
+        .ingredient-tag {
+            background: var(--green-soft);
+            border: 1px solid #dfebdd;
+            color: var(--green-dark);
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+        }
+
+        .product-link {
+            display: block;
+            text-align: center;
+            padding: 13px;
+            border-radius: 999px;
+            margin-top: 20px;
+            color: white;
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--green-dark), var(--green));
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 6px 15px rgba(36, 81, 63, .14);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .product-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 9px 20px rgba(36, 81, 63, .2);
+        }
+
+        .empty-message {
+            color: var(--muted);
+            padding: 18px 0;
+        }
+
+        /* MORNING AND NIGHT ROUTINES */
+        .routine-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .routine-symbol {
+            flex: 0 0 48px;
+            width: 48px;
+            height: 48px;
+            background: #f7f1e2;
+            border: 1px solid #eee3c8;
+            color: #846b37;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .night-symbol {
+            background: #eef0fa;
+            border-color: #e0e4f4;
+            color: #5c6289;
+        }
+
+        .routine-heading h2 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .routine-subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .routine-steps {
+            list-style: none;
+            padding: 0;
+            margin: 26px 0 0;
+            counter-reset: step;
+        }
+
+        .routine-steps li {
+            position: relative;
+            padding: 0 0 25px 49px;
+            margin-left: 9px;
+            border-left: 1px solid #dce9dc;
+        }
+
+        .routine-steps li:last-child {
+            padding-bottom: 0;
+            border-left-color: transparent;
+        }
+
+        .step-number {
+            position: absolute;
+            left: -15px;
+            top: -3px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: #e8f3e7;
+            border: 1px solid #d9e9d8;
+            color: var(--green-dark);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .step-name {
+            color: var(--green-dark);
+            font-weight: 800;
+            font-size: 15px;
+            margin: 0 0 7px;
+        }
+
+        .step-description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* SKIN ASSESSMENT */
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .assessment-box {
+            background: linear-gradient(135deg, #f3f8f1, #f0f9f7);
+            border: 1px solid #e1ece0;
+            padding: 22px;
+            border-radius: 19px;
+        }
+
+        .assessment-box h3 {
+            color: var(--green-dark);
+            margin: 0 0 12px;
+            font-size: 16px;
+        }
+
+        .assessment-box p,
+        .assessment-box li {
+            color: #5f6d63;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .assessment-box ul {
+            padding-left: 19px;
+            margin-bottom: 0;
+        }
+
+        /* AI EXPLANATION - NEW */
+        .ai-explanation {
+            margin-top: 18px;
+            padding: 20px 22px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: linear-gradient(135deg, #f8fbf6, #f0f8f5);
+        }
+
+        .ai-explanation h3 {
+            color: var(--green-dark);
+            font-size: 16px;
+            margin: 0 0 10px;
+        }
+
+        .ai-explanation p {
+            color: #5f6d63;
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .disclaimer {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+            margin-top: 22px;
+            padding: 15px 17px;
+            border-left: 3px solid #c8dcbf;
+            background: #f8faf6;
+            border-radius: 0 12px 12px 0;
+        }
+
+        /* BOTTOM BUTTONS */
+        .bottom-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .action-link {
+            padding: 14px 23px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--green-dark), var(--green));
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 7px 18px rgba(36, 81, 63, .13);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .action-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(36, 81, 63, .18);
+        }
+
+        .secondary-link {
+            background: white;
+            color: var(--green-dark);
+            border: 1px solid #d6e5d6;
+            box-shadow: none;
+        }
+
+        .secondary-link:hover {
+            background: var(--green-soft);
+        }
+
+        /* TABLET */
+        @media (max-width: 850px) {
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* MOBILE */
+        @media (max-width: 560px) {
+            nav {
+                top: 7px;
+                width: calc(100% - 20px);
+                margin-top: 7px;
+                padding: 13px 15px;
+                border-radius: 22px;
+            }
+
+            .logo {
+                font-size: 19px;
+            }
+
+            nav a {
+                padding: 9px 12px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 0 13px;
+                margin-top: 23px;
+            }
+
+            .page-heading {
+                margin-bottom: 23px;
+                padding-top: 14px;
+            }
+
+            .panel {
+                padding: 20px;
+                border-radius: 20px;
+                margin-bottom: 18px;
+            }
+
+            .panel h2 {
+                font-size: 22px;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .product-image-wrap {
+                height: 155px;
+                padding: 9px;
+            }
+
+            .product-content {
+                padding: 12px;
+            }
+
+            .product-name {
+                font-size: 14px;
+            }
+
+            .product-price {
+                font-size: 16px;
+                margin-bottom: 14px;
+            }
+
+            .product-purpose {
+                font-size: 12px;
+            }
+
+            .ingredient-tag {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+
+            .product-link {
+                padding: 11px 8px;
+                font-size: 12px;
+            }
+
+            .profile-grid,
+            .assessment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .routine-heading h2 {
+                font-size: 21px;
+            }
+
+            .bottom-actions {
+                flex-direction: column;
+            }
+
+            .action-link {
+                text-align: center;
+            }
+        }
+
+        /* Fixed SkinCare AI logo watermark */
+        .fixed-logo-watermark {
+            position: fixed;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: min(360px, 72vw);
+            aspect-ratio: 1 / 1;
+
+            background-image: url("/static/skincare-logo.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Keep cart content above the logo */
+        header,
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Let the subtle watermark show through cart panels */
+        .cart-items,
+        .summary,
+        .empty {
+            background: rgba(255, 255, 255, 0.91);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 760px) {
+            .fixed-logo-watermark {
+                width: min(260px, 72vw);
+                opacity: 0.04;
+            }
+        }
+
+        /* SkinCare AI navbar logo */
+        .logo,
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fixed-logo-watermark" aria-hidden="true"></div>
+    <nav>
+        <div class="logo">
+            <img class="brand-logo" src="{{ url_for('static', filename='skincare-logo.png') }}" alt="SkinCare AI logo">
+            SkinCare AI
+        </div>
+        <a href="/shop">Beauty Shop</a>
+    </nav>
+
+    <main class="container">
+
+        <header class="page-heading">
+            <div class="eyebrow">Your personal skincare guide</div>
+            <h1>Your Skin, Your Routine</h1>
+            <p class="subtitle">
+                Explore your preliminary skin assessment, discover products
+                from our catalog, and follow a simple morning and evening routine.
+            </p>
+        </header>
+
+        <!-- PROFILE -->
+        <section class="panel">
+            <h2>Your Profile</h2>
+
+            <div class="profile-grid">
+                <div class="profile-item">
+                    <div class="profile-label">Name</div>
+                    <div class="profile-value">{{ name or "User" }}</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="profile-label">Age</div>
+                    <div class="profile-value">{{ age or "Not provided" }}</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="profile-label">Preference</div>
+                    <div class="profile-value">{{ preference or "Not specified" }}</div>
+                </div>
+            </div>
+
+            {% if image_path %}
+            <img class="face-photo" src="{{ image_path }}" alt="Uploaded face photo">
+            {% endif %}
+        </section>
+
+        <!-- RECOMMENDED PRODUCTS -->
+        <section class="panel">
+            <h2>Recommended for You</h2>
+            <p class="section-intro">
+                A curated selection from our product catalog. Product details and
+                ingredients are shown briefly to keep your routine easy to follow.
+            </p>
+
+            <div class="product-grid">
+
+                {% for product in recommendations %}
+                <article class="product-card">
+
+                    <div class="product-image-wrap">
+                        {% if product.image_url %}
+                        <img class="product-image" src="{{ product.image_url }}" alt="{{ product.name }}"
+                            loading="lazy">
+                        {% else %}
+                        <div class="image-placeholder">Product image</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="product-content">
+
+                        <h3 class="product-name">{{ product.name }}</h3>
+
+                        <div class="product-price">
+                            {% if product.price %}
+                            ₹{{ product.price }}
+                            {% else %}
+                            Price coming soon
+                            {% endif %}
+                        </div>
+
+                        <div class="small-heading">What it does</div>
+
+                        <p class="product-purpose">
+                            {% set category = product.category|default('', true)|lower %}
+
+                            {% if 'cleanser' in category %}
+                            Helps remove daily dirt, oil and buildup as the first step in your skincare routine.
+                            {% elif 'moisturizer' in category %}
+                            Helps moisturize the skin and maintain a comfortable, hydrated feel.
+                            {% elif 'sunscreen' in category %}
+                            Helps protect skin from UV exposure when used according to the product label.
+                            {% elif 'toner' in category %}
+                            Adds a skincare step after cleansing to complement the rest of your routine.
+                            {% elif 'serum' in category %}
+                            Provides a focused skincare step using the ingredients listed for this formula.
+                            {% elif 'mask' in category %}
+                            An occasional skincare step. Follow the product label for how often and how long to use it.
+                            {% elif 'eye care' in category %}
+                            Designed for the delicate under-eye area. Follow the product's usage directions.
+                            {% else %}
+                            A skincare product to use according to its label and your personal routine.
+                            {% endif %}
+                        </p>
+
+                        {% if product.ingredients %}
+                        <div class="small-heading">Key Ingredients</div>
+
+                        <div class="ingredient-list">
+                            {% for ingredient in product.ingredients.split(',')[:2] %}
+                            {% if ingredient.strip() %}
+                            <span class="ingredient-tag">
+                                {{ ingredient.strip() }}
+                            </span>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        {% if product.id %}
+                        <a class="product-link" href="{{ url_for('product_detail', product_id=product.id|int) }}">
+                            View Product
+                        </a>
+                        {% endif %}
+
+                    </div>
+                </article>
+
+                {% else %}
+                <p class="empty-message">
+                    No matching products were found in the current catalog.
+                </p>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <!-- MORNING ROUTINE -->
+        <section class="panel">
+
+            <div class="routine-heading">
+                <div class="routine-symbol">AM</div>
+                <div>
+                    <h2>Morning Routine</h2>
+                    <div class="routine-subtitle">A simple start to your day</div>
+                </div>
+            </div>
+
+            <p class="section-intro">
+                Apply products from lightest to heaviest. Finish with sunscreen
+                as the final step of your morning skincare routine.
+            </p>
+
+            {% set routine_tips = {
+            'Gentle Foaming Cleanser': 'Use on damp skin, massage gently, then rinse. Avoid scrubbing.',
+            'Hydrating Gentle Cleanser': 'Gently cleanse without rubbing the skin harshly.',
+            'Gentle Daily Cleanser': 'Wash gently and rinse before applying the next step.',
+            'Lightweight Gel Moisturizer': 'Apply a light layer after cleansing to help retain moisture.',
+            'Ceramide Moisturizer': 'Apply evenly to help moisturize and support the skin barrier.',
+            'Balanced Daily Moisturizer': 'Spread gently over the face and allow it to absorb.',
+            'Oil-Free Sunscreen SPF 50': 'Apply as the final morning step. Follow the label for the amount and
+            reapplication.',
+            'Hydrating Sunscreen SPF 50': 'Use as the final morning step and reapply as directed on the label.',
+            'Daily Sunscreen SPF 50': 'Finish your morning routine with sunscreen and reapply according to the label.',
+            'Niacinamide Serum': 'Apply a small amount as directed, avoiding the eyes. Introduce new products
+            gradually.',
+            'Hydrating Serum': 'Apply as directed, then follow with moisturizer.'
+            } %}
+
+            <ol class="routine-steps">
+                {% for step in routine.morning %}
+                <li>
+                    <span class="step-number">{{ loop.index }}</span>
+                    <h3 class="step-name">{{ step }}</h3>
+                    <p class="step-description">
+                        {{ routine_tips.get(step, 'Use according to the product label, then continue to the next step.')
+                        }}
+                    </p>
+                </li>
+                {% else %}
+                <li>No morning routine is available yet.</li>
+                {% endfor %}
+            </ol>
+
+        </section>
+
+        <!-- NIGHT ROUTINE -->
+        <section class="panel">
+
+            <div class="routine-heading">
+                <div class="routine-symbol night-symbol">PM</div>
+                <div>
+                    <h2>Night Routine</h2>
+                    <div class="routine-subtitle">A gentle evening reset</div>
+                </div>
+            </div>
+
+            <p class="section-intro">
+                Cleanse first, apply any treatment step included in your routine,
+                then moisturize. Avoid adding too many new products at once.
+            </p>
+
+            {% set night_tips = {
+            'Gentle Foaming Cleanser': 'Gently remove daily buildup. Rinse well and pat dry.',
+            'Hydrating Gentle Cleanser': 'Cleanse gently without scrubbing or using very hot water.',
+            'Gentle Daily Cleanser': 'Clean the face gently before applying other products.',
+            'Niacinamide Serum': 'Use a small amount as directed, then allow it to absorb before moisturizing.',
+            'Hydrating Serum': 'Apply as directed, then seal in hydration with moisturizer.',
+            'Lightweight Gel Moisturizer': 'Apply a light, even layer to help maintain skin hydration.',
+            'Ceramide Moisturizer': 'Apply evenly to help moisturize and support the skin barrier.',
+            'Balanced Daily Moisturizer': 'Finish with a comfortable layer of moisturizer.'
+            } %}
+
+            <ol class="routine-steps">
+                {% for step in routine.night %}
+                <li>
+                    <span class="step-number">{{ loop.index }}</span>
+                    <h3 class="step-name">{{ step }}</h3>
+                    <p class="step-description">
+                        {{ night_tips.get(step, 'Use according to the product label. Keep the routine gentle and
+                        simple.') }}
+                    </p>
+                </li>
+                {% else %}
+                <li>No night routine is available yet.</li>
+                {% endfor %}
+            </ol>
+
+        </section>
+
+        <!-- SKIN ASSESSMENT -->
+        <section class="panel">
+            <h2>Your Skin Assessment</h2>
+
+            <p class="section-intro">
+                These are preliminary estimates based on the uploaded image.
+                Lighting, camera quality and image framing can affect the result.
+            </p>
+
+            <div class="assessment-grid">
+
+                <div class="assessment-box">
+                    <h3>Possible Skin Type</h3>
+                    <p>{{ result.skin_type }}</p>
+                </div>
+
+                <div class="assessment-box">
+                    <h3>Possible Visible Signs</h3>
+
+                    {% if result.concerns %}
+                    <ul>
+                        {% for concern in result.concerns %}
+                        <li>{{ concern }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No visible signs were returned by the current assessment.</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <!-- NEW: LOCAL AI EXPLANATION -->
+            {% if result.analysis_explanation %}
+            <div class="ai-explanation">
+                <h3>AI's Visual Explanation</h3>
+                <p>{{ result.analysis_explanation }}</p>
+            </div>
+            {% endif %}
+
+            <p class="disclaimer">
+                This image-based assessment is experimental and is not a medical
+                diagnosis. Product descriptions and ingredient lists should be
+                checked against the actual packaging. Patch-test new products and
+                stop use if irritation occurs. Consult a dermatologist for persistent
+                or concerning skin problems.
+            </p>
+        </section>
+
+        <!-- PAGE ACTIONS -->
+        <div class="bottom-actions">
+            <a class="action-link" href="/analysis">Analyze Another Image</a>
+            <a class="action-link secondary-link" href="/shop">Explore Beauty Shop</a>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

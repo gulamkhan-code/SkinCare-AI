@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Analysis | SkinCare AI</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='skincare-logo.png') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --green: #24513f;
+            --fresh: #438e68;
+            --pale: #edf5ed;
+            --text: #29483b;
+            --muted: #718077;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #fcfcf9;
+            color: var(--text);
+        }
+
+        .navbar {
+            width: calc(100% - 48px);
+            max-width: 1500px;
+            margin: 14px auto;
+            padding: 14px 26px;
+            min-height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background: white;
+            border: 1px solid #e1ebe1;
+            border-radius: 28px;
+            box-shadow: 0 8px 28px #24513f0c;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--green);
+            font-size: 25px;
+            font-weight: 750;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            color: var(--green);
+        }
+
+        .brand-name span {
+            color: var(--fresh);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #53645a;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--green);
+            background: var(--pale);
+        }
+
+        .nav-cta {
+            background: var(--fresh);
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+
+        main {
+            padding: 40px 18px 65px;
+            background:
+                radial-gradient(ellipse at top left, #e9f2df 0%, transparent 36%),
+                radial-gradient(ellipse at bottom right, #e5f2e9 0%, transparent 35%),
+                #fcfcf9;
+        }
+
+        .intro {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 30px;
+        }
+
+        .eyebrow {
+            color: var(--fresh);
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 3px;
+            margin-bottom: 14px;
+        }
+
+        .intro h1 {
+            font-family: Georgia, serif;
+            color: var(--green);
+            font-size: clamp(34px, 5vw, 49px);
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+
+        .intro p {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .form-card {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            max-width: 850px;
+            margin: auto;
+            padding: 32px;
+            background: rgba(255, 255, 255, .97);
+            border: 1px solid #e3ece2;
+            border-radius: 28px;
+            box-shadow: 0 18px 55px #24513f12;
+
+        }
+
+        /* Subtle SkinCare AI logo watermark behind the form */
+        .form-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background-image: url("/static/skincare-logo.png");
+            background-repeat: no-repeat;
+            background-position: top;
+            background-size: min(360px, 72%);
+            opacity: 0.15;
+
+            pointer-events: none;
+            z-index: 0;
+            border-radius: inherit;
+        }
+
+        /* Keep form fields, labels, and buttons above the watermark */
+        .form-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Smaller watermark on mobile screens */
+        @media (max-width: 760px) {
+            .form-card::before {
+                background-size: min(260px, 78%);
+                opacity: 0.1;
+            }
+        }
+
+        .section {
+            margin-bottom: 28px;
+        }
+
+        .section h2 {
+            font-size: 19px;
+            color: var(--green);
+            margin-bottom: 8px;
+        }
+
+        .hint {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 17px;
+        }
+
+        .field {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #dce7dc;
+            border-radius: 13px;
+            background: white;
+            color: var(--text);
+            font: inherit;
+            outline: none;
+        }
+
+        .field:focus {
+            border-color: var(--fresh);
+            box-shadow: 0 0 0 3px #438e6818;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 650;
+            margin-bottom: 8px;
+        }
+
+        .upload-box {
+            padding: 25px 18px;
+            text-align: center;
+            border: 1.5px dashed #a9c9b1;
+            border-radius: 20px;
+            background: #f7fbf6;
+        }
+
+        .upload-icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 12px;
+            display: grid;
+            place-items: center;
+            border-radius: 17px;
+            background: #e4f1e6;
+            color: var(--green);
+            font-size: 27px;
+        }
+
+        .upload-box h3 {
+            font-size: 16px;
+            margin-bottom: 7px;
+            overflow-wrap: anywhere;
+        }
+
+        .upload-box p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 11px 20px;
+            border: 1px solid #c6d9c9;
+            border-radius: 13px;
+            background: white;
+            color: var(--green);
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        #preview {
+            display: none;
+            max-width: 190px;
+            max-height: 220px;
+            margin: 18px auto 0;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 5px 18px #24513f20;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 17px;
+            border: none;
+            border-radius: 15px;
+            background: var(--green);
+            color: white;
+            font-size: 15px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: background .2s, opacity .2s;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: var(--fresh);
+        }
+
+        .submit-btn:disabled {
+            opacity: .7;
+            cursor: wait;
+        }
+
+        .privacy {
+            margin-top: 15px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        footer {
+            padding: 22px 12px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            border-top: 1px solid #e8e9df;
+        }
+
+        /* Uploaded-photo scanner overlay */
+        #skinScanOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(20, 31, 27, .88);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+        }
+
+        #skinScanOverlay.active {
+            display: flex;
+        }
+
+        .scan-card {
+            width: 100%;
+            max-width: 370px;
+            padding: 24px 20px;
+            border-radius: 24px;
+            background: #fffaf7;
+            color: #24453a;
+            text-align: center;
+            box-shadow: 0 20px 70px rgba(0, 0, 0, .3);
+        }
+
+        .scan-face {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            aspect-ratio: 3 / 4;
+            margin: 0 auto;
+            overflow: hidden;
+            border: 2px solid #e6b2ad;
+            border-radius: 20px;
+            background: #f8dfd7;
+            box-shadow: 0 0 25px #fb718544;
+        }
+
+        .scan-photo {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #f8dfd7;
+        }
+
+        .scan-laser {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #ff5577;
+            box-shadow: 0 0 12px 5px #fb718588;
+            animation: scanMove 1.8s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .scan-line-glow {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 36px;
+            background: linear-gradient(to bottom, #fb718544, transparent);
+            animation: scanGlow 1.8s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .scan-title {
+            margin: 18px 0 8px;
+            font-size: 22px;
+            font-weight: 750;
+        }
+
+        .scan-description {
+            color: #77736f;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .scan-dots {
+            display: inline-block;
+            width: 25px;
+            text-align: left;
+        }
+
+        .scan-dots::after {
+            content: "";
+            animation: scanDots 1.2s steps(4, end) infinite;
+        }
+
+        @keyframes scanMove {
+            from {
+                top: 0;
+            }
+
+            to {
+                top: calc(100% - 3px);
+            }
+        }
+
+        @keyframes scanGlow {
+            from {
+                top: 0;
+            }
+
+            to {
+                top: calc(100% - 36px);
+            }
+        }
+
+        @keyframes scanDots {
+            0% {
+                content: "";
+            }
+
+            25% {
+                content: ".";
+            }
+
+            50% {
+                content: "..";
+            }
+
+            75%,
+            100% {
+                content: "...";
+            }
+        }
+
+        @media (max-width: 760px) {
+            .navbar {
+                width: calc(100% - 20px);
+                justify-content: center;
+                flex-wrap: wrap;
+                padding: 16px;
+            }
+
+            .nav-links {
+                justify-content: center;
+                width: 100%;
+                order: 3;
+            }
+
+            .nav-links a {
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            .form-card {
+                padding: 23px 17px;
+            }
+
+            .field-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .scan-laser,
+            .scan-dots::after {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="brand">
+            <img class="brand-logo" src="{{ url_for('static', filename='skincare-logo.png') }}" alt="SkinCare AI logo">
+            <span class="brand-name">SkinCare <span>AI</span></span>
+        </a>
+
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('analysis') }}" class="active">Analysis</a>
+            <a href="{{ url_for('analysis') }}">Recommendations</a>
+            <a href="{{ url_for('shop') }}">Shop</a>
+        </div>
+
+        <a href="#analysis-form" class="nav-cta">Start Analysis ↗</a>
+    </nav>
+
+    <main>
+        <header class="intro">
+            <div class="eyebrow">✦ YOUR PERSONAL SKINCARE COMPANION ✦</div>
+            <h1>Understand Your Skin.</h1>
+            <p>
+                Share your face image and preferences to get skin analysis
+                and personalized product recommendations.
+            </p>
+        </header>
+
+        <form id="analysis-form" class="form-card" action="{{ url_for('analysis') }}" method="POST"
+            enctype="multipart/form-data">
+
+            <section class="section">
+                <h2>01. Your Details</h2>
+                <p class="hint">Add your details to personalize your results.</p>
+
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label for="name">Name</label>
+                        <input class="field" type="text" id="name" name="name" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="age">Age</label>
+                        <input class="field" type="number" id="age" name="age" min="1" max="120"
+                            placeholder="Enter your age" required>
+                    </div>
+                </div>
+
+                <div class="field-group" style="margin-top:16px">
+                    <label for="preference">Skincare Preference</label>
+                    <select class="field" id="preference" name="preference">
+                        <option value="">Choose your preference</option>
+                        <option value="Natural">Natural ingredients</option>
+                        <option value="Hydration">Hydration and moisturising</option>
+                        <option value="Acne Care">Acne care</option>
+                        <option value="Brightening">Brightening and even tone</option>
+                        <option value="Sensitive Skin">Sensitive-skin care</option>
+                        <option value="Sun Protection">Sun protection</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>02. Upload Your Face Image</h2>
+                <p class="hint">
+                    Choose a clear, front-facing photo in natural light.
+                </p>
+
+                <div class="upload-box">
+                    <div class="upload-icon">✧</div>
+                    <h3 id="file-title">Choose your image</h3>
+                    <p id="file-hint">JPG, JPEG or PNG</p>
+
+                    <label for="face_image" class="file-label">
+                        Browse Image
+                    </label>
+
+                    <input type="file" id="face_image" name="face_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                        required>
+
+                    <img id="preview" alt="Selected face preview">
+                </div>
+            </section>
+
+            <button type="submit" class="submit-btn" id="analyzeButton">
+                Analyze My Skin &nbsp; →
+            </button>
+
+            <p class="privacy">
+                ✦ Results are estimates based on visible image features,
+                not a medical diagnosis.
+            </p>
+        </form>
+    </main>
+
+    <footer>
+        © 2026 SkinCare AI · Your Skin, Your Natural Glow
+    </footer>
+
+    <!-- Uploaded photo scanner -->
+    <div id="skinScanOverlay" role="status" aria-live="polite" aria-label="Scanning uploaded skin photo">
+        <div class="scan-card">
+            <div class="scan-face">
+                <img id="scanUploadedImage" class="scan-photo" alt="Your uploaded photo being scanned">
+
+                <div class="scan-line-glow"></div>
+                <div class="scan-laser"></div>
+            </div>
+
+            <div class="scan-title">Analyzing Your Skin</div>
+
+            <p class="scan-description">
+                Our AI is checking your uploaded photo and visible skin concerns.
+                Please keep this page open until your results appear.
+            </p>
+
+            <p style="margin-top:14px;font-weight:700;color:#bb7779">
+                Scanning<span class="scan-dots"></span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            "use strict";
+
+            const form = document.getElementById("analysis-form");
+            const imageInput = document.getElementById("face_image");
+            const preview = document.getElementById("preview");
+            const fileTitle = document.getElementById("file-title");
+            const fileHint = document.getElementById("file-hint");
+            const overlay = document.getElementById("skinScanOverlay");
+            const scanImage = document.getElementById("scanUploadedImage");
+            const button = document.getElementById("analyzeButton");
+
+            if (!form || !imageInput || !preview || !fileTitle || !fileHint ||
+                !overlay || !scanImage || !button) {
+                console.error("SkinCare AI scanner: required element missing.");
+                return;
+            }
+
+            let submitting = false;
+            let previewUrl = null;
+            let scanUrl = null;
+            const initialButtonText = button.textContent;
+
+            /* Photo upload preview */
+            imageInput.addEventListener("change", function () {
+                const file = imageInput.files && imageInput.files[0];
+
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                    previewUrl = null;
+                }
+
+                if (!file) {
+                    preview.style.display = "none";
+                    preview.removeAttribute("src");
+                    fileTitle.textContent = "Choose your image";
+                    fileHint.textContent = "JPG, JPEG or PNG";
+                    return;
+                }
+
+                const allowedTypes = ["image/jpeg", "image/png"];
+                const validExtension = /\.(jpe?g|png)$/i.test(file.name);
+                const validType =
+                    allowedTypes.includes(file.type) || file.type === "";
+
+                if (!validExtension || !validType) {
+                    alert("Please select a JPG, JPEG or PNG image.");
+                    imageInput.value = "";
+                    preview.style.display = "none";
+                    preview.removeAttribute("src");
+                    fileTitle.textContent = "Choose your image";
+                    fileHint.textContent = "JPG, JPEG or PNG";
+                    return;
+                }
+
+                previewUrl = URL.createObjectURL(file);
+                preview.src = previewUrl;
+                preview.style.display = "block";
+
+                fileTitle.textContent = file.name;
+                fileHint.textContent = "Image selected successfully";
+            });
+
+            /* Single submit + scan the exact selected photo */
+            form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                if (submitting) {
+                    return;
+                }
+
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                const file = imageInput.files && imageInput.files[0];
+
+                if (!file) {
+                    alert("Please select a face image first.");
+                    return;
+                }
+
+                submitting = true;
+                button.disabled = true;
+                button.textContent = "Analyzing... Please wait";
+
+                /*
+                 * Load the same selected file into the scanner image.
+                 * This is a local preview URL; the file is still uploaded to Flask
+                 * using FormData below.
+                 */
+                if (scanUrl) {
+                    URL.revokeObjectURL(scanUrl);
+                }
+
+                scanUrl = URL.createObjectURL(file);
+                scanImage.src = scanUrl;
+                scanImage.alt = "Scanning " + file.name;
+
+                overlay.classList.add("active");
+                document.body.style.overflow = "hidden";
+
+                try {
+                    /*
+                     * Wait for the selected image to decode and for the browser
+                     * to render the overlay before starting the Flask request.
+                     */
+                    if (typeof scanImage.decode === "function") {
+                        await scanImage.decode();
+                    } else {
+                        await new Promise(function (resolve, reject) {
+                            scanImage.onload = resolve;
+                            scanImage.onerror = reject;
+                        });
+                    }
+
+                    await new Promise(function (resolve) {
+                        requestAnimationFrame(function () {
+                            requestAnimationFrame(resolve);
+                        });
+                    });
+
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        body: new FormData(form),
+                        credentials: "same-origin",
+                        headers: {
+                            "X-Requested-With": "fetch"
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Server returned HTTP " + response.status);
+                    }
+                    const data = await response.json();
+
+                    if (!data.redirect_url) {
+                        throw new Error("Result page URL was not returned.");
+                    }
+
+                    // Open the real recommendations URL.
+                    // Browser history will now point to the results page.
+                    window.location.replace(data.redirect_url);
+
+                } catch (error) {
+                    console.error("Skin analysis request failed:", error);
+
+                    overlay.classList.remove("active");
+                    document.body.style.overflow = "";
+
+                    submitting = false;
+                    button.disabled = false;
+                    button.textContent = initialButtonText;
+
+                    alert(
+                        "Could not complete the analysis request. " +
+                        "Please check the Flask terminal for the error and try again."
+                    );
+                }
+            });
+
+            /* Restore button if the browser returns to this form via Back */
+            window.addEventListener("pageshow", function () {
+                submitting = false;
+                button.disabled = false;
+                button.textContent = initialButtonText;
+
+                overlay.classList.remove("active");
+                document.body.style.overflow = "";
+            });
+        })();
+    </script>
+
+</body>
+
+</html>

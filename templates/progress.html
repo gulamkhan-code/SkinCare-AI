@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Progress Tracking | SkinCare AI</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='skincare-logo.png') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --green: #24513f;
+            --fresh: #438e68;
+            --pale: #edf5ed;
+            --text: #29483b;
+            --muted: #718077;
+            --border: #e1ebe1;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #fcfcf9;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Curved navbar */
+        .navbar {
+            width: calc(100% - 48px);
+            max-width: 1500px;
+            min-height: 78px;
+            margin: 14px auto;
+            padding: 14px 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background: rgba(255, 255, 255, .97);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: 0 8px 28px rgba(36, 81, 63, .07);
+        }
+
+        .brand {
+            color: var(--green);
+            font-size: 25px;
+            font-weight: 750;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .brand span {
+            color: var(--fresh);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #53645a;
+            font-size: 14px;
+            font-weight: 650;
+            padding: 12px 16px;
+            border-radius: 17px;
+            transition: .2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--green);
+            background: var(--pale);
+        }
+
+        .nav-cta {
+            background: var(--fresh);
+            color: white !important;
+            border-radius: 19px !important;
+        }
+
+        /* Page */
+        main {
+            padding: 40px 18px 65px;
+            background:
+                radial-gradient(ellipse at top left, #e9f2df 0%, transparent 36%),
+                radial-gradient(ellipse at bottom right, #e5f2e9 0%, transparent 35%),
+                #fcfcf9;
+        }
+
+        .intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 35px;
+        }
+
+        .eyebrow {
+            color: var(--fresh);
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 2.5px;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            font-family: Georgia, serif;
+            color: var(--green);
+            font-size: clamp(34px, 5vw, 49px);
+            line-height: 1.2;
+            margin-bottom: 15px;
+        }
+
+        h1 span {
+            color: var(--fresh);
+            font-style: italic;
+        }
+
+        .intro p {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* Upload card */
+        .form-card {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            padding: 32px;
+            background: rgba(255, 255, 255, .97);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: 0 18px 55px rgba(36, 81, 63, .08);
+        }
+
+        .section-title {
+            color: var(--green);
+            font-size: 19px;
+            margin-bottom: 9px;
+        }
+
+        .section-hint {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 23px;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .upload-card {
+            min-width: 0;
+            padding: 23px 18px;
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 21px;
+        }
+
+        .upload-card h3 {
+            color: var(--green);
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .upload-card>p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            min-height: 44px;
+            margin-bottom: 17px;
+        }
+
+        .upload-area {
+            min-height: 190px;
+            padding: 20px 12px;
+            border: 1.5px dashed #a9c9b1;
+            border-radius: 17px;
+            background: #f7fbf6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .upload-icon {
+            width: 49px;
+            height: 49px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: #e4f1e6;
+            color: var(--green);
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .upload-label {
+            color: var(--green);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 7px;
+            overflow-wrap: anywhere;
+        }
+
+        .upload-help {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .browse-btn {
+            display: inline-block;
+            padding: 11px 18px;
+            border: 1px solid #c6d9c9;
+            border-radius: 12px;
+            background: white;
+            color: var(--green);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .browse-btn:hover {
+            background: var(--pale);
+            border-color: var(--fresh);
+        }
+
+        .preview {
+            display: none;
+            width: 100%;
+            height: 220px;
+            margin-top: 17px;
+            object-fit: contain;
+            border-radius: 14px;
+            background: #f3f7ef;
+        }
+
+        /* Button and note */
+        .compare-btn {
+            width: 100%;
+            margin-top: 27px;
+            padding: 17px 20px;
+            border: none;
+            border-radius: 15px;
+            background: var(--green);
+            color: white;
+            font-size: 15px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .compare-btn:hover {
+            background: var(--fresh);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(36, 81, 63, .13);
+        }
+
+        .compare-btn:disabled {
+            opacity: .7;
+            cursor: wait;
+            transform: none;
+        }
+
+        .privacy-note {
+            margin-top: 17px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px 15px;
+            color: var(--muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 760px) {
+            .navbar {
+                width: calc(100% - 20px);
+                padding: 15px;
+                border-radius: 23px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .brand {
+                font-size: 23px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                order: 3;
+                gap: 3px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+                padding: 9px 11px;
+            }
+
+            main {
+                padding: 32px 14px 45px;
+            }
+
+            .form-card {
+                padding: 22px 16px;
+                border-radius: 23px;
+            }
+
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-card {
+                padding: 18px 14px;
+            }
+
+            .upload-card>p {
+                min-height: auto;
+            }
+
+            .upload-area {
+                min-height: 170px;
+            }
+        }
+
+        /* Fixed SkinCare AI logo watermark */
+        .fixed-logo-watermark {
+            position: fixed;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: min(360px, 72vw);
+            aspect-ratio: 1 / 1;
+
+            background-image: url("/static/skincare-logo.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+
+            opacity: 0.10;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Keep navbar, footer and main content above watermark */
+        .navbar,
+        footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Keep main background from hiding the fixed logo */
+        main {
+            position: relative;
+            z-index: auto;
+        }
+
+        /* Keep the intro and form above the watermark */
+        main>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Allow the watermark to show subtly through the form card */
+        .form-card {
+            background: rgba(255, 255, 255, 0.90);
+        }
+
+        /* Keep upload boxes clean but slightly transparent */
+        .upload-card {
+            background: rgba(255, 255, 255, 0.90);
+        }
+
+        .upload-area {
+            background: rgba(247, 251, 246, 0.90);
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 760px) {
+            .fixed-logo-watermark {
+                width: min(260px, 72vw);
+                opacity: 0.08;
+            }
+        }
+
+        /* FIX: Make fixed logo watermark visible on Progress page */
+        body {
+            background:
+                radial-gradient(ellipse at top left, #e9f2df 0%, transparent 36%),
+                radial-gradient(ellipse at bottom right, #e5f2e9 0%, transparent 35%),
+                #fcfcf9 !important;
+        }
+
+        /* Keep the logo fixed while page content scrolls */
+        .fixed-logo-watermark {
+            position: fixed !important;
+            top: 35% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+
+            width: min(360px, 72vw) !important;
+            aspect-ratio: 1 / 1;
+
+            background-image: url("/static/skincare-logo.png") !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            background-size: contain !important;
+
+            opacity: 0.16 !important;
+            pointer-events: none !important;
+            z-index: 0 !important;
+        }
+
+        /* Remove the opaque main background that can hide the watermark */
+        main {
+            background: transparent !important;
+            position: relative;
+            z-index: auto !important;
+        }
+
+        /* Keep page content above the logo */
+        .navbar,
+        footer,
+        main>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Reveal the watermark through the large form card */
+        .form-card {
+            background: rgba(255, 255, 255, 0.74) !important;
+        }
+
+        /* Keep upload panels readable */
+        .upload-card {
+            background: rgba(255, 255, 255, 0.86) !important;
+        }
+
+        .upload-area {
+            background: rgba(247, 251, 246, 0.86) !important;
+        }
+
+        @media (max-width: 760px) {
+            .fixed-logo-watermark {
+                width: min(260px, 72vw) !important;
+                opacity: 0.12 !important;
+            }
+        }
+
+        /* SkinCare AI navbar logo */
+        .logo,
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fixed-logo-watermark" aria-hidden="true"></div>
+    <header class="navbar">
+        <a href="{{ url_for('home') }}" class="brand">
+            <img class="brand-logo" src="{{ url_for('static', filename='skincare-logo.png') }}" alt="SkinCare AI logo">
+            SkinCare <span>AI</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('analysis') }}">Analysis</a>
+            <a href="{{ url_for('progress') }}" class="active">Progress</a>
+            <a href="{{ url_for('shop') }}">Shop</a>
+        </nav>
+
+        <a href="{{ url_for('analysis') }}" class="nav-links nav-cta" style="padding:12px 17px;text-decoration:none;">
+            Analyze Skin ↗
+        </a>
+    </header>
+
+    <main>
+        <section class="intro">
+            <div class="eyebrow">✦ YOUR SKINCARE JOURNEY ✦</div>
+
+            <h1>Track Your Skin's<br><span>Progress & Glow.</span></h1>
+
+            <p>
+                Compare your previous and current face photos to review
+                changes reported by your skin analysis.
+            </p>
+        </section>
+
+        <form id="progress-form" class="form-card" action="/progress" method="POST" enctype="multipart/form-data">
+            <h2 class="section-title">Compare Your Photos</h2>
+
+            <p class="section-hint">
+                Upload both images to compare them. Try to use similar lighting
+                and camera angles for a more meaningful comparison.
+            </p>
+
+            <div class="upload-grid">
+
+                <section class="upload-card">
+                    <h3>01. Previous Photo</h3>
+                    <p>Choose the photo you want to use as your starting point.</p>
+
+                    <div class="upload-area">
+                        <div class="upload-icon">↥</div>
+
+                        <div class="upload-label" id="before-label">
+                            Upload previous photo
+                        </div>
+
+                        <div class="upload-help">JPG, JPEG or PNG</div>
+
+                        <label class="browse-btn" for="before_image">
+                            Browse Image
+                        </label>
+
+                        <input type="file" id="before_image" name="before_image"
+                            accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+                    </div>
+
+                    <img id="before-preview" class="preview" alt="Previous photo preview">
+                </section>
+
+                <section class="upload-card">
+                    <h3>02. Current Photo</h3>
+                    <p>Choose your latest photo to compare with the previous one.</p>
+
+                    <div class="upload-area">
+                        <div class="upload-icon">✧</div>
+
+                        <div class="upload-label" id="after-label">
+                            Upload current photo
+                        </div>
+
+                        <div class="upload-help">JPG, JPEG or PNG</div>
+
+                        <label class="browse-btn" for="after_image">
+                            Browse Image
+                        </label>
+
+                        <input type="file" id="after_image" name="after_image"
+                            accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+                    </div>
+
+                    <img id="after-preview" class="preview" alt="Current photo preview">
+                </section>
+
+            </div>
+
+            <button type="submit" class="compare-btn" id="compare-button">
+                Compare Skin Progress &nbsp; →
+            </button>
+
+            <p class="privacy-note">
+                ✦ Lighting and camera angle can affect results.
+                This comparison is an estimate, not a medical diagnosis.
+            </p>
+        </form>
+    </main>
+
+    <footer>
+        © 2026 SkinCare AI · Your Skin, Your Natural Glow
+    </footer>
+
+    <script>
+        function setupPreview(inputId, previewId, labelId, defaultText) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            const label = document.getElementById(labelId);
+
+            input.addEventListener("change", function () {
+                const file = this.files[0];
+
+                if (!file) {
+                    preview.style.display = "none";
+                    label.textContent = defaultText;
+                    return;
+                }
+
+                const allowedTypes = ["image/jpeg", "image/png"];
+
+                if (!allowedTypes.includes(file.type)) {
+                    alert("Please select a JPG, JPEG or PNG image.");
+                    this.value = "";
+                    preview.style.display = "none";
+                    label.textContent = defaultText;
+                    return;
+                }
+
+                if (preview.dataset.objectUrl) {
+                    URL.revokeObjectURL(preview.dataset.objectUrl);
+                }
+
+                const objectUrl = URL.createObjectURL(file);
+                preview.src = objectUrl;
+                preview.dataset.objectUrl = objectUrl;
+                preview.style.display = "block";
+                label.textContent = file.name;
+            });
+        }
+
+        setupPreview(
+            "before_image",
+            "before-preview",
+            "before-label",
+            "Upload previous photo"
+        );
+
+        setupPreview(
+            "after_image",
+            "after-preview",
+            "after-label",
+            "Upload current photo"
+        );
+
+        document.getElementById("progress-form").addEventListener("submit", function () {
+            const button = document.getElementById("compare-button");
+
+            if (this.checkValidity()) {
+                button.textContent = "Comparing Photos...";
+                button.disabled = true;
+            }
+        });
+    </script>
+
+</body>
+
+</html>

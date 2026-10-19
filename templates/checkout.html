@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | SkinCare AI</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='skincare-logo.png') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --green: #24513f;
+            --fresh: #438e68;
+            --pale: #edf5ed;
+            --text: #29483b;
+            --muted: #718077;
+            --border: #e1ebe1;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(ellipse at top left, #e9f2df 0%, transparent 36%),
+                radial-gradient(ellipse at bottom right, #e5f2e9 0%, transparent 35%),
+                #fcfcf9;
+            ;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Premium curved navbar */
+        header {
+            width: calc(100% - 48px);
+            max-width: 1500px;
+            min-height: 78px;
+            margin: 14px auto;
+            padding: 14px 26px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            background: rgba(255, 255, 255, 0.97);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: 0 8px 28px rgba(36, 81, 63, 0.07);
+        }
+
+        .logo {
+            font-weight: 750;
+            font-size: 25px;
+            color: var(--green);
+        }
+
+        a {
+            color: var(--green);
+            text-decoration: none;
+        }
+
+        header a {
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-weight: 650;
+            transition: 0.2s ease;
+        }
+
+        header a:hover {
+            background: var(--pale);
+        }
+
+        /* Checkout content */
+        main {
+            max-width: 1150px;
+            margin: 45px auto;
+            padding: 0 24px;
+        }
+
+        h1 {
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: clamp(32px, 4vw, 44px);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .panel {
+            background: #fff;
+            padding: 27px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            box-shadow: 0 12px 35px rgba(36, 81, 63, 0.06);
+        }
+
+        h2 {
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: 24px;
+            margin: 0 0 22px;
+        }
+
+        label {
+            display: block;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 650;
+            margin: 18px 0 8px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #dce6dc;
+            border-radius: 13px;
+            font-size: 14px;
+            color: var(--text);
+            background: #fbfcf9;
+            transition: 0.2s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: 2px solid #d6e9d8;
+            border-color: var(--fresh);
+            background: #fff;
+        }
+
+        textarea {
+            min-height: 95px;
+            resize: vertical;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 0;
+            border-bottom: 1px solid #edf1e9;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 78px;
+            height: 84px;
+            object-fit: contain;
+            background: #f3f7ef;
+            border: 1px solid #edf1e9;
+            border-radius: 15px;
+            flex-shrink: 0;
+        }
+
+        .item-name {
+            color: var(--green);
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .item-meta {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .item-price {
+            margin-left: auto;
+            color: var(--fresh);
+            font-size: 13px;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 22px;
+            padding-top: 19px;
+            border-top: 1px solid var(--border);
+            color: var(--green);
+            font-size: 19px;
+            font-weight: 750;
+        }
+
+        .place-button,
+        .shop-link {
+            display: inline-block;
+            width: 100%;
+            border: none;
+            background: var(--green);
+            color: #fff;
+            padding: 16px;
+            border-radius: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 22px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .place-button:hover,
+        .shop-link:hover {
+            background: var(--fresh);
+            transform: translateY(-1px);
+        }
+
+        .note {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-top: 15px;
+        }
+
+        .success,
+        .empty {
+            background: #fff;
+            padding: 38px 28px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            box-shadow: 0 12px 35px rgba(36, 81, 63, 0.06);
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .success {
+            display: none;
+        }
+
+        .success h2 {
+            color: var(--green);
+            margin: 14px 0;
+        }
+
+        .success-icon {
+            color: var(--fresh);
+            font-size: 48px;
+        }
+
+        .empty h2 {
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 760px) {
+            header {
+                width: calc(100% - 20px);
+                padding: 16px;
+                border-radius: 23px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            header a {
+                font-size: 13px;
+                padding: 10px;
+            }
+
+            main {
+                margin: 30px auto;
+                padding: 0 15px;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 20px;
+                border-radius: 21px;
+            }
+
+            .item-image {
+                width: 65px;
+                height: 72px;
+            }
+
+            .item-price {
+                font-size: 12px;
+            }
+        }
+
+        /* Fixed SkinCare AI logo watermark */
+        .fixed-logo-watermark {
+            position: fixed;
+            top: 32%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: min(360px, 72vw);
+            aspect-ratio: 1 / 1;
+
+            background-image: url("/static/skincare-logo.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Keep cart content above the logo */
+        header,
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Let the subtle watermark show through cart panels */
+        .cart-items,
+        .summary,
+        .empty {
+            background: rgba(255, 255, 255, 0.91);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 760px) {
+            .fixed-logo-watermark {
+                width: min(260px, 72vw);
+                opacity: 0.04;
+            }
+        }
+
+        /* SkinCare AI navbar logo */
+        .logo,
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fixed-logo-watermark" aria-hidden="true"></div>
+    <header>
+        <div class="logo">
+            <img class="brand-logo" src="{{ url_for('static', filename='skincare-logo.png') }}" alt="SkinCare AI logo">
+            SkinCare AI
+        </div>
+        <a href="/cart">← Back to My Bag</a>
+    </header>
+
+    <main>
+        <h1>Checkout</h1>
+        <p class="subtitle">Just a few details before your skincare order.</p>
+
+        <div id="checkoutLayout" class="layout">
+
+            <form class="panel" id="checkoutForm">
+                <h2>Delivery Details</h2>
+
+                <label for="name">Full Name</label>
+                <input id="name" name="name" type="text" maxlength="100" autocomplete="name" required>
+
+                <label for="phone">Mobile Number</label>
+                <input id="phone" name="phone" type="tel" maxlength="20" autocomplete="tel" required>
+
+                <label for="email">Email Address (optional)</label>
+                <input id="email" name="email" type="email" maxlength="150" autocomplete="email">
+
+                <label for="address">Delivery Address</label>
+                <textarea id="address" name="address" maxlength="500" autocomplete="street-address" required></textarea>
+
+                <label for="city">City</label>
+                <input id="city" name="city" type="text" maxlength="100" autocomplete="address-level2" required>
+
+                <label for="pincode">PIN Code</label>
+                <input id="pincode" name="pincode" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
+                    autocomplete="postal-code" title="Enter a 6-digit PIN code" required>
+
+                <button class="place-button" type="submit">
+                    Place Demo Order
+                </button>
+
+                <p class="note">
+                    This is a project demonstration. No real payment
+                    will be collected and no delivery will be arranged.
+                </p>
+            </form>
+
+            <section class="panel">
+                <h2>Your Order</h2>
+
+                <div id="orderItems"></div>
+
+                <div class="total-row">
+                    <span>Total</span>
+                    <span id="orderTotal">—</span>
+                </div>
+
+                <p class="note">
+                    Products without a verified price will show
+                    “Price pending”. The final amount is not confirmed
+                    until actual prices are configured.
+                </p>
+            </section>
+
+        </div>
+
+        <section class="success" id="successPanel" role="status">
+            <div class="success-icon">✓</div>
+            <h2>Demo Order Confirmed!</h2>
+            <p id="successMessage"></p>
+            <p>
+                This is a local demo confirmation only.
+                No real order or payment was processed.
+            </p>
+            <a class="shop-link" href="/shop">Continue Shopping</a>
+        </section>
+    </main>
+
+    <script>
+        const orderItems = document.getElementById("orderItems");
+        const orderTotal = document.getElementById("orderTotal");
+        const checkoutForm = document.getElementById("checkoutForm");
+        const checkoutLayout = document.getElementById("checkoutLayout");
+        const successPanel = document.getElementById("successPanel");
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, function (char) {
+                return {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                }[char];
+            });
+        }
+
+        function getBag() {
+            try {
+                const bag = JSON.parse(
+                    localStorage.getItem("skincareBag") || "[]"
+                );
+                return Array.isArray(bag) ? bag : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function formatPrice(price) {
+            return "₹" + Number(price).toLocaleString("en-IN");
+        }
+
+        function renderOrder() {
+            const bag = getBag();
+
+            if (bag.length === 0) {
+                checkoutLayout.innerHTML = `
+                <section class="empty">
+                    <h2>Your bag is empty</h2>
+                    <p>Add a product before checking out.</p>
+                    <a href="/shop">Explore Beauty Shop</a>
+                </section>
+            `;
+                return;
+            }
+
+            let total = 0;
+            let pricesComplete = true;
+            let totalQuantity = 0;
+
+            orderItems.innerHTML = bag.map(item => {
+                const quantity = Math.max(1, Number(item.quantity) || 1);
+                const priceText = String(item.price ?? "").replace(/[₹,\s]/g, "");
+                const price = Number(priceText);
+                const hasPrice = priceText !== "" &&
+                    Number.isFinite(price) &&
+                    price >= 0;
+
+                totalQuantity += quantity;
+
+                if (hasPrice) {
+                    total += price * quantity;
+                } else {
+                    pricesComplete = false;
+                }
+
+                const image = item.image
+                    ? `<img class="item-image"
+                       src="${escapeHTML(item.image)}"
+                       alt="${escapeHTML(item.name)}">`
+                    : "";
+
+                return `
+                <div class="order-item">
+                    ${image}
+                    <div>
+                        <div class="item-name">${escapeHTML(item.name)}</div>
+                        <div class="item-meta">Quantity: ${quantity}</div>
+                    </div>
+                    <div class="item-price">
+                        ${hasPrice ? formatPrice(price * quantity) : "Price pending"}
+                    </div>
+                </div>
+            `;
+            }).join("");
+
+            orderTotal.textContent = pricesComplete
+                ? formatPrice(total)
+                : "Price pending";
+        }
+
+        checkoutForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const bag = getBag();
+
+            if (bag.length === 0) {
+                alert("Your bag is empty. Please add a product first.");
+                window.location.href = "/shop";
+                return;
+            }
+
+            if (!checkoutForm.reportValidity()) {
+                return;
+            }
+
+            const customerName = document.getElementById("name").value.trim();
+
+            const itemCount = bag.reduce(
+                (sum, item) => sum + Math.max(1, Number(item.quantity) || 1),
+                0
+            );
+
+            document.getElementById("successMessage").textContent =
+                "Thank you, " + customerName +
+                "! Your demo order contains " + itemCount +
+                (itemCount === 1 ? " item." : " items.");
+
+            checkoutLayout.style.display = "none";
+            successPanel.style.display = "block";
+
+            // This is a demo: nothing is sent to a server.
+            localStorage.removeItem("skincareBag");
+        });
+
+        renderOrder();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Shop | SkinCare AI</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='skincare-logo.png') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        :root {
+            --green-dark: #24513f;
+            --green: #438e68;
+            --green-light: #edf5ed;
+            --aqua: #e8f5f1;
+            --cream: #fcfcf9;
+            --text: #26372e;
+            --muted: #718077;
+            --border: #e1ebe1;
+            --gold: #c4a66a;
+        }
+
+        body {
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.5;
+            transition: background-color .25s, color .25s;
+        }
+
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* NAVBAR */
+        header {
+            padding: 17px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, .96);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            margin: 18px auto 0;
+            width: 90%;
+            box-shadow: 0 8px 28px rgba(36, 81, 63, .07);
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            color: var(--green-dark);
+            white-space: nowrap;
+            letter-spacing: -.5px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #506257;
+            padding: 10px 14px;
+            border-radius: 22px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background .2s, color .2s;
+        }
+
+        nav a:hover {
+            background: var(--green-light);
+            color: var(--green-dark);
+        }
+
+        nav a:last-child {
+            background: var(--green-dark);
+            color: white;
+        }
+
+        nav a:last-child:hover {
+            background: var(--green);
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 68px 20px 38px;
+            position: relative;
+        }
+
+        /* Fixed SkinCare AI watermark */
+        .fixed-watermark {
+            position: fixed;
+            top: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            width: min(400px, 72vw);
+            aspect-ratio: 1 / 1;
+
+            background-image: url("/static/skincare-logo.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Keep all shop content above the watermark */
+        header,
+        .hero,
+        .collections,
+        .products,
+        footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 700px) {
+            .fixed-watermark {
+                top: 90px;
+                width: min(260px, 75vw);
+                opacity: 0.04;
+            }
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: var(--aqua);
+            opacity: .65;
+            filter: blur(45px);
+            left: calc(50% - 110px);
+            top: 45px;
+            z-index: -1;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 7px 15px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            color: var(--green-dark);
+            background: var(--green-light);
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: Georgia, serif;
+            font-size: clamp(34px, 5vw, 52px);
+            font-weight: 500;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            color: var(--green-dark);
+        }
+
+        .hero h1 span {
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-style: italic;
+        }
+
+        .hero p {
+            color: var(--muted);
+            font-size: 16px;
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .hero-divider {
+            width: 52px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 5px;
+            margin: 25px auto 0;
+        }
+
+        /* COLOUR FILTERS */
+        .collections {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 11px;
+            padding: 12px 7% 38px;
+        }
+
+        .collection-btn {
+            border: 1px solid var(--border);
+            padding: 11px 19px;
+            border-radius: 30px;
+            background: white;
+            color: #536458;
+            box-shadow: 0 4px 14px rgba(36, 81, 63, .045);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all .22s ease;
+        }
+
+        .collection-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--green);
+            color: var(--green-dark);
+        }
+
+        .collection-btn.active {
+            background: var(--green-dark);
+            border-color: var(--green-dark);
+            color: white;
+            box-shadow: 0 5px 15px rgba(36, 81, 63, .16);
+        }
+
+        /* PRODUCT GRID */
+        .products {
+            padding: 5px 7% 75px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            min-width: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 23px;
+            overflow: hidden;
+            box-shadow: 0 6px 22px rgba(36, 81, 63, .055);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 30px rgba(36, 81, 63, .11);
+        }
+
+        .product-image,
+        .no-image {
+            width: 100%;
+            height: 245px;
+            display: block;
+            object-fit: contain;
+            background: linear-gradient(145deg, #f2f7ef, #edf6f3);
+            padding: 18px;
+            transition: background .25s ease, transform .3s ease;
+        }
+
+        .no-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.025);
+        }
+
+        .product-info {
+            padding: 19px;
+        }
+
+        .product-name {
+            font-family: Georgia, serif;
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            color: var(--green-dark);
+            overflow-wrap: anywhere;
+        }
+
+        .price {
+            font-size: 19px;
+            font-weight: bold;
+            color: var(--green);
+            margin-bottom: 13px;
+        }
+
+        .ingredients {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .ingredient-title {
+            color: var(--green-dark);
+            font-weight: 700;
+        }
+
+        .view-btn {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            padding: 12px 14px;
+            border: 1px solid var(--green-dark);
+            border-radius: 13px;
+            background: var(--green-dark);
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all .2s ease;
+        }
+
+        .view-btn:hover {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .empty-message {
+            display: none;
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--muted);
+            padding: 40px 15px;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 25px 7%;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            background: #f5f8f2;
+            font-size: 13px;
+        }
+
+        footer span {
+            color: var(--green-dark);
+            font-weight: bold;
+        }
+
+        /* DEFAULT: ALL PRODUCTS */
+        body.theme-all {
+            --green-dark: #24513f;
+            --green: #438e68;
+            --green-light: #edf5ed;
+            --aqua: #e8f5f1;
+            --border: #e1ebe1;
+        }
+
+        /* AQUA */
+        body.theme-aqua {
+            --green-dark: #24566a;
+            --green: #398fa8;
+            --green-light: #e4f5fa;
+            --aqua: #dff3f8;
+            --border: #d7ebf1;
+        }
+
+        body.theme-aqua .product-image,
+        body.theme-aqua .no-image {
+            background: linear-gradient(145deg, #edfaff, #dff3f8);
+        }
+
+        /* PEACH */
+        body.theme-peach {
+            --green-dark: #98502f;
+            --green: #d47b43;
+            --green-light: #fff0e5;
+            --aqua: #ffeadb;
+            --border: #f2dfd1;
+        }
+
+        body.theme-peach .product-image,
+        body.theme-peach .no-image {
+            background: linear-gradient(145deg, #fff6ed, #ffe6d4);
+        }
+
+        /* GREEN */
+        body.theme-green {
+            --green-dark: #32603e;
+            --green: #5b995d;
+            --green-light: #eaf5e7;
+            --aqua: #e3f0df;
+            --border: #dce9d8;
+        }
+
+        body.theme-green .product-image,
+        body.theme-green .no-image {
+            background: linear-gradient(145deg, #f2f8ed, #e0efdc);
+        }
+
+        /* GOLD */
+        body.theme-gold {
+            --green-dark: #78602e;
+            --green: #b3964f;
+            --green-light: #f8f1df;
+            --aqua: #f5edda;
+            --border: #ece2c9;
+        }
+
+        body.theme-gold .product-image,
+        body.theme-gold .no-image {
+            background: linear-gradient(145deg, #fffaf0, #f4ead2);
+        }
+
+        /* IVORY */
+        body.theme-ivory {
+            --green-dark: #586b57;
+            --green: #82977b;
+            --green-light: #f0f3eb;
+            --aqua: #e9eee3;
+            --border: #e3e7dc;
+        }
+
+        body.theme-ivory .product-image,
+        body.theme-ivory .no-image {
+            background: linear-gradient(145deg, #f8f8f0, #e9eee3);
+        }
+
+        /* ORANGE */
+        body.theme-orange {
+            --green-dark: #9a4f21;
+            --green: #e18a36;
+            --green-light: #fff0dc;
+            --aqua: #ffead0;
+            --border: #f2dfc7;
+        }
+
+        body.theme-orange .product-image,
+        body.theme-orange .no-image {
+            background: linear-gradient(145deg, #fff7eb, #ffead0);
+        }
+
+        /* PURPLE */
+        body.theme-purple {
+            --green-dark: #5b527f;
+            --green: #8b7db8;
+            --green-light: #f0edfa;
+            --aqua: #eae6f7;
+            --border: #e2ddf2;
+        }
+
+        body.theme-purple .product-image,
+        body.theme-purple .no-image {
+            background: linear-gradient(145deg, #f8f5ff, #eae6f7);
+        }
+
+        /* PINK */
+        body.theme-pink {
+            --green-dark: #87465b;
+            --green: #c16f88;
+            --green-light: #fbeaf0;
+            --aqua: #f8e3eb;
+            --border: #f0dce4;
+        }
+
+        body.theme-pink .product-image,
+        body.theme-pink .no-image {
+            background: linear-gradient(145deg, #fff3f6, #f7e1e9);
+        }
+
+        /* BROWN */
+        body.theme-brown {
+            --green-dark: #684b3a;
+            --green: #a47b5d;
+            --green-light: #f4ebe4;
+            --aqua: #eee0d4;
+            --border: #e8d9cc;
+        }
+
+        body.theme-brown .product-image,
+        body.theme-brown .no-image {
+            background: linear-gradient(145deg, #faf4ed, #eee0d4);
+        }
+
+        /* NUDE */
+        body.theme-nude {
+            --green-dark: #80645b;
+            --green: #b79586;
+            --green-light: #f7eeea;
+            --aqua: #f0e2dc;
+            --border: #eadbd4;
+        }
+
+        body.theme-nude .product-image,
+        body.theme-nude .no-image {
+            background: linear-gradient(145deg, #fff8f3, #f0e2dc);
+        }
+
+        /* RED */
+        body.theme-red {
+            --green-dark: #8b333b;
+            --green: #c6505b;
+            --green-light: #fbe9e9;
+            --aqua: #f7dddd;
+            --border: #efd5d5;
+        }
+
+        body.theme-red .product-image,
+        body.theme-red .no-image {
+            background: linear-gradient(145deg, #fff3f1, #f7dddd);
+        }
+
+        /* CREAM */
+        body.theme-cream {
+            --green-dark: #76674a;
+            --green: #b39b70;
+            --green-light: #f8f3e7;
+            --aqua: #f1ead9;
+            --border: #eae1ce;
+        }
+
+        body.theme-cream .product-image,
+        body.theme-cream .no-image {
+            background: linear-gradient(145deg, #fffdf5, #f1ead9);
+        }
+
+        /* Theme-aware buttons and cards */
+        body[class*="theme-"] .collection-btn.active {
+            background: var(--green-dark);
+            border-color: var(--green-dark);
+            color: white;
+        }
+
+        body[class*="theme-"] .product-card {
+            border-color: var(--border);
+        }
+
+        body[class*="theme-"] .hero-tag {
+            background: var(--green-light);
+            border-color: var(--border);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1100px) {
+            .products {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 18px;
+            }
+
+            header {
+                width: 94%;
+                padding: 16px 4%;
+            }
+
+            nav {
+                gap: 3px;
+            }
+
+            nav a {
+                padding: 9px 10px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            header {
+                width: 94%;
+                margin-top: 10px;
+                padding: 15px;
+                border-radius: 22px;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            nav {
+                justify-content: center;
+                gap: 4px;
+                width: 100%;
+            }
+
+            nav a {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 48px 18px 28px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .collections {
+                padding: 10px 4% 28px;
+                gap: 8px;
+            }
+
+            .collection-btn {
+                padding: 10px 13px;
+                font-size: 12px;
+            }
+
+            .products {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 13px;
+                padding: 5px 4% 48px;
+            }
+
+            .product-card {
+                border-radius: 17px;
+            }
+
+            .product-image,
+            .no-image {
+                height: 175px;
+                padding: 10px;
+            }
+
+            .product-info {
+                padding: 12px;
+            }
+
+            .product-name {
+                font-size: 14px;
+                line-height: 1.45;
+            }
+
+            .price {
+                font-size: 16px;
+            }
+
+            .ingredients {
+                font-size: 11px;
+            }
+
+            .view-btn {
+                padding: 10px 6px;
+                font-size: 12px;
+                border-radius: 10px;
+                margin-top: 14px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            nav a {
+                padding: 8px 7px;
+                font-size: 11px;
+            }
+
+            .product-image,
+            .no-image {
+                height: 145px;
+            }
+
+            .product-info {
+                padding: 10px;
+            }
+
+            .product-name {
+                font-size: 13px;
+            }
+        }
+
+        /* SkinCare AI navbar logo */
+        .logo,
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body class="theme-all">
+
+    <div class="fixed-watermark" aria-hidden="true"></div>
+
+    <header>
+        <div class="logo">
+            <img class="brand-logo" src="{{ url_for('static', filename='skincare-logo.png') }}" alt="SkinCare AI logo">
+            SkinCare AI
+        </div>
+
+        <nav>
+            <a href="/">Home</a>
+            <a href="/analysis">AI Analysis</a>
+            <a href="/progress">Progress</a>
+            <a href="/cart">My Bag 🛍️</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-tag">Your self-care destination</div>
+
+        <h1>Beauty, Naturally <span>Yours.</span></h1>
+
+        <p>
+            Discover skincare, body care and hair care products
+            made to fit beautifully into your daily routine.
+        </p>
+
+        <div class="hero-divider"></div>
+    </section>
+
+    <!-- COLOUR FILTER BUTTONS -->
+    <section class="collections" id="colourFilters">
+
+        <button type="button" class="collection-btn active" data-collection="all">
+            ✦ All Products
+        </button>
+
+        <button type="button" class="collection-btn" data-collection="color:aqua">💧 Aqua Hydration Care</button>
+        <button type="button" class="collection-btn" data-collection="color:peach">🍑 Pure & Gentle Care</button>
+        <button type="button" class="collection-btn" data-collection="color:green">🌿 Fresh Botanical Care</button>
+        <button type="button" class="collection-btn" data-collection="color:gold">✨ Pure Radiance Care</button>
+        <button type="button" class="collection-btn" data-collection="color:pink">🌸 Citrus Glow Care</button>
+        <button type="button" class="collection-btn" data-collection="color:brown">🤎 Lip Care</button>
+
+    </section>
+
+    <section class="products" id="productGrid">
+
+        {% for product in products %}
+
+        <div class="product-card" data-collection="{{ product.get('collection', '')|lower|trim }}"
+            data-color="{{ product.get('color', '')|lower|trim }}">
+
+            {% if product.image_url %}
+            <img class="product-image" src="{{ product.image_url }}" alt="{{ product.product_name }}" loading="lazy">
+            {% else %}
+            <div class="no-image">Image unavailable</div>
+            {% endif %}
+
+            <div class="product-info">
+
+                <div class="product-name">
+                    {{ product.product_name }}
+                </div>
+
+                {% if product.price %}
+                <div class="price">₹{{ product.price }}</div>
+                {% else %}
+                <div class="price">Price coming soon</div>
+                {% endif %}
+
+                {% if product.ingredients %}
+                <div class="ingredients">
+                    <span class="ingredient-title">Key Ingredients:</span>
+                    {{ product.ingredients }}
+                </div>
+                {% endif %}
+
+                {% if product.get('id') %}
+                <a href="{{ url_for('product_detail', product_id=product.get('id')|int) }}" class="view-btn">
+                    View Product →
+                </a>
+                {% endif %}
+
+            </div>
+        </div>
+
+        {% endfor %}
+
+        <div class="empty-message" id="emptyMessage">
+            No products found for this colour.
+        </div>
+
+    </section>
+
+    <footer>
+        Made with care by <span>SkinCare AI</span> 💚
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const buttons = document.querySelectorAll(".collection-btn");
+            const cards = document.querySelectorAll(".product-card");
+            const emptyMessage = document.getElementById("emptyMessage");
+
+            const themeMap = {
+                aqua: "theme-aqua",
+                peach: "theme-peach",
+                green: "theme-green",
+                gold: "theme-gold",
+                ivory: "theme-ivory",
+                orange: "theme-orange",
+                purple: "theme-purple",
+                pink: "theme-pink",
+                brown: "theme-brown",
+                nude: "theme-nude",
+                red: "theme-red",
+                cream: "theme-cream"
+            };
+
+            const allThemeClasses = [
+                "theme-all",
+                ...Object.values(themeMap)
+            ];
+
+            function changeTheme(filter) {
+                document.body.classList.remove(...allThemeClasses);
+
+                if (filter === "all") {
+                    document.body.classList.add("theme-all");
+                    return;
+                }
+
+                if (filter.startsWith("color:")) {
+                    const color = filter.slice(6).trim().toLowerCase();
+                    const theme = themeMap[color];
+
+                    if (theme) {
+                        document.body.classList.add(theme);
+                    } else {
+                        document.body.classList.add("theme-all");
+                    }
+                } else {
+                    document.body.classList.add("theme-all");
+                }
+            }
+
+            function filterProducts(filter) {
+                let visibleCount = 0;
+
+                cards.forEach(function (card) {
+                    const color = (
+                        card.dataset.color || ""
+                    ).trim().toLowerCase();
+
+                    let show = false;
+
+                    if (filter === "all") {
+                        show = true;
+                    } else if (filter.startsWith("color:")) {
+                        const selectedColor = filter
+                            .slice(6)
+                            .trim()
+                            .toLowerCase();
+
+                        show = color === selectedColor;
+                    }
+
+                    card.style.display = show ? "" : "none";
+
+                    if (show) {
+                        visibleCount++;
+                    }
+                });
+
+                if (emptyMessage) {
+                    emptyMessage.style.display =
+                        visibleCount === 0 ? "block" : "none";
+                }
+            }
+
+            buttons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    const filter = (
+                        button.dataset.collection || "all"
+                    ).trim().toLowerCase();
+
+                    buttons.forEach(function (item) {
+                        item.classList.remove("active");
+                    });
+
+                    button.classList.add("active");
+
+                    filterProducts(filter);
+                    changeTheme(filter);
+                });
+            });
+
+            // Initial page state
+            filterProducts("all");
+            changeTheme("all");
+        });
+    </script>
+
+</body>
+
+</html>

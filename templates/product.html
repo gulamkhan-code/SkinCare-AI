@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.product_name }} | SkinCare AI</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='skincare-logo.png') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --green: #24513f;
+            --fresh: #438e68;
+            --pale: #edf5ed;
+            --text: #29483b;
+            --muted: #718077;
+            --border: #e1ebe1;
+        }
+
+        body {
+            background: radial-gradient(ellipse at top left, #e9f2df 0%, transparent 36%),
+                radial-gradient(ellipse at bottom right, #e5f2e9 0%, transparent 35%),
+                #fcfcf9;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Floating curved navbar */
+        header {
+            width: calc(100% - 48px);
+            max-width: 1500px;
+            min-height: 78px;
+            margin: 14px auto;
+            padding: 14px 26px;
+            background: rgba(255, 255, 255, 0.97);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: 0 8px 28px rgba(36, 81, 63, 0.07);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            color: var(--green);
+            font-size: 25px;
+            font-weight: 750;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px !important;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .back-link {
+            color: var(--green);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 650;
+            padding: 12px 17px;
+            border-radius: 17px;
+            transition: 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: var(--pale);
+        }
+
+        /* Product layout */
+        .product-layout {
+            max-width: 1200px;
+            margin: 55px auto;
+            padding: 0 28px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 65px;
+            align-items: center;
+        }
+
+        /* Product image card */
+        .image-panel {
+            background: linear-gradient(145deg, #f5f8ef, #edf5ed);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(36, 81, 63, 0.06);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 480px;
+            object-fit: contain;
+            padding: 28px;
+            transition: transform 0.35s ease;
+        }
+
+        .image-panel:hover .product-image {
+            transform: scale(1.035);
+        }
+
+        .no-image {
+            color: var(--muted);
+            padding: 30px;
+            text-align: center;
+        }
+
+        /* Product details */
+        .eyebrow {
+            color: var(--fresh);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            font-size: 11px;
+            font-weight: 750;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: clamp(30px, 3.5vw, 43px);
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            color: var(--fresh);
+            font-size: 28px;
+            font-weight: 750;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: var(--green);
+            font-size: 15px;
+            font-weight: 750;
+            margin-bottom: 10px;
+        }
+
+        .ingredients,
+        .description {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.9;
+            margin-bottom: 25px;
+            overflow-wrap: anywhere;
+        }
+
+        /* Add to Bag */
+        .add-button {
+            width: 100%;
+            border: 1px solid var(--green);
+            background: var(--green);
+            color: white;
+            padding: 17px;
+            border-radius: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .add-button:hover {
+            background: var(--fresh);
+            border-color: var(--fresh);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(36, 81, 63, 0.15);
+        }
+
+        .toast {
+            display: none;
+            margin-top: 15px;
+            padding: 14px;
+            background: var(--pale);
+            border: 1px solid #d8e8d8;
+            color: var(--green);
+            border-radius: 13px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        @media (max-width: 760px) {
+            header {
+                width: calc(100% - 20px);
+                padding: 15px;
+                border-radius: 23px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            nav {
+                gap: 4px !important;
+            }
+
+            .back-link {
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .product-layout {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                margin: 30px auto;
+                padding: 0 16px;
+            }
+
+            .image-panel {
+                min-height: 320px;
+                border-radius: 23px;
+            }
+
+            .product-image {
+                height: 320px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 31px;
+            }
+
+            .price {
+                font-size: 25px;
+            }
+        }
+
+        /* Fixed SkinCare AI logo watermark */
+        .fixed-logo-watermark {
+            position: fixed;
+            top: 45%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+
+            width: min(360px, 72vw);
+            aspect-ratio: 1 / 1;
+
+            background-image: url("/static/skincare-logo.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Keep product page content above the watermark */
+        header,
+        .product-layout {
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 760px) {
+            .fixed-logo-watermark {
+                width: min(260px, 72vw);
+                opacity: 0.04;
+            }
+        }
+
+        /* SkinCare AI navbar logo */
+        .logo,
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="fixed-logo-watermark" aria-hidden="true"></div>
+    <header>
+        <div class="logo">
+            <img class="brand-logo" src="{{ url_for('static', filename='skincare-logo.png') }}" alt="SkinCare AI logo">
+            SkinCare AI
+        </div>
+
+        <nav style="display: flex; gap: 20px; align-items: center;">
+            <a class="back-link" href="/shop">← Back to Shop</a>
+
+            <a class="back-link" href="/cart">My Bag 🛍️</a>
+        </nav>
+    </header>
+
+
+    <main class="product-layout">
+
+        <div class="image-panel">
+            {% if product.image_url %}
+            <img class="product-image" src="{{ product.image_url }}" alt="{{ product.product_name }}">
+            {% else %}
+            <div class="no-image">Product image unavailable</div>
+            {% endif %}
+        </div>
+
+        <section>
+            <div class="eyebrow">Your skincare shelf</div>
+
+            <h1>{{ product.product_name }}</h1>
+
+            {% if product.price %}
+            <div class="price">₹{{ product.price }}</div>
+            {% else %}
+            <div class="price">Price coming soon</div>
+            {% endif %}
+
+            {% if product.ingredients %}
+            <div class="section-title">Key Ingredients</div>
+            <p class="ingredients">{{ product.ingredients }}</p>
+            {% endif %}
+
+            {% if product.description %}
+            <div class="section-title">About this product</div>
+            <p class="description">{{ product.description }}</p>
+            {% endif %}
+
+            <button class="add-button" onclick="addToBag()">
+                Add to Bag
+            </button>
+
+            <div class="toast" id="cartMessage" role="status">
+                Added to your bag!
+            </div>
+        </section>
+
+    </main>
+
+    <script type="application/json" id="currentProductJson">
+{{ {
+    "id": product.get("id"),
+    "name": product.get("product_name", product.get("name", "")),
+    "price": product.get("price", ""),
+    "image": product.get("image_url", product.get("image", "")),
+    "ingredients": product.get("ingredients", "")
+} | tojson }}
+</script>
+
+
+    <script>
+
+        const currentProduct = JSON.parse(
+            document.getElementById("currentProductJson").textContent
+        );
+
+        function addToBag() {
+            let bag;
+
+            try {
+                bag = JSON.parse(localStorage.getItem("skincareBag") || "[]");
+                if (!Array.isArray(bag)) bag = [];
+            } catch (error) {
+                bag = [];
+            }
+
+            const existing = bag.find(
+                item => String(item.id) === String(currentProduct.id)
+            );
+
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+                bag.push({
+                    ...currentProduct,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem("skincareBag", JSON.stringify(bag));
+
+            const message = document.getElementById("cartMessage");
+            message.style.display = "block";
+            message.textContent = "✓ Added to your bag!";
+        }
+    </script>
+
+</body>
+
+</html>

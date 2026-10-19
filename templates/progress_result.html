@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Progress | SkinCare AI</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='skincare-logo.png') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --green: #24513f;
+            --fresh: #438e68;
+            --pale: #edf5ed;
+            --text: #29483b;
+            --muted: #718077;
+            --border: #e1ebe1;
+        }
+
+        body {
+            background: radial-gradient(ellipse at top left, #e9f2df 0%, transparent 36%),
+                radial-gradient(ellipse at bottom right, #e5f2e9 0%, transparent 35%),
+                #fcfcf9;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Premium curved navbar */
+        header {
+            width: calc(100% - 48px);
+            max-width: 1500px;
+            min-height: 78px;
+            margin: 14px auto;
+            padding: 14px 26px;
+            background: rgba(255, 255, 255, 0.97);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: 0 8px 28px rgba(36, 81, 63, 0.07);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .logo {
+            color: var(--green);
+            font-size: 25px;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--green);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 650;
+            padding: 12px 16px;
+            border-radius: 17px;
+            transition: 0.2s ease;
+        }
+
+        nav a:hover {
+            background: var(--pale);
+        }
+
+        /* Page heading */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 48px auto;
+            padding: 0 26px;
+        }
+
+        .page-heading {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .eyebrow {
+            color: var(--fresh);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            font-size: 11px;
+            font-weight: 750;
+            margin-bottom: 13px;
+        }
+
+        h1 {
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: clamp(32px, 4vw, 44px);
+            line-height: 1.2;
+            margin-bottom: 13px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* Before and after cards */
+        .comparison {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            min-width: 0;
+            background: #fff;
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            box-shadow: 0 12px 35px rgba(36, 81, 63, 0.06);
+            overflow: hidden;
+        }
+
+        .card-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: 25px;
+        }
+
+        .photo-label {
+            background: var(--pale);
+            color: var(--green);
+            border-radius: 20px;
+            padding: 7px 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .photo-frame {
+            width: 100%;
+            height: 330px;
+            background: #f3f7ef;
+            border: 1px solid var(--border);
+            border-radius: 19px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .section-title {
+            color: var(--green);
+            font-size: 14px;
+            font-weight: 750;
+            margin: 20px 0 10px;
+        }
+
+        .skin-type {
+            display: inline-block;
+            background: var(--pale);
+            color: var(--green);
+            padding: 9px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 650;
+            overflow-wrap: anywhere;
+        }
+
+        .concern-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .concern-list li {
+            background: #f7f9f5;
+            color: #526b5c;
+            border: 1px solid #e6eee3;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .no-concerns {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* Progress summary */
+        .progress-card {
+            background: #fff;
+            margin-top: 28px;
+            padding: 30px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            box-shadow: 0 12px 35px rgba(36, 81, 63, 0.06);
+        }
+
+        .summary-heading {
+            margin-bottom: 24px;
+        }
+
+        .summary-heading h2 {
+            margin-bottom: 9px;
+        }
+
+        .summary-heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .good,
+        .warning {
+            padding: 22px;
+            border-radius: 19px;
+            min-width: 0;
+        }
+
+        .good {
+            background: #f0f7f0;
+            border: 1px solid #dcebdd;
+        }
+
+        .warning {
+            background: #fff8ed;
+            border: 1px solid #f2e5cd;
+        }
+
+        .good h3,
+        .warning h3 {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .good h3 {
+            color: var(--green);
+        }
+
+        .warning h3 {
+            color: #876331;
+        }
+
+        .summary-list {
+            padding-left: 20px;
+            line-height: 1.9;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .good .summary-list {
+            color: #456d50;
+        }
+
+        .warning .summary-list {
+            color: #896a3c;
+        }
+
+        .summary-list li {
+            padding-left: 3px;
+            margin-bottom: 4px;
+        }
+
+        .summary-empty {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 23px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .button-primary {
+            background: var(--green);
+            color: #fff;
+            border: 1px solid var(--green);
+        }
+
+        .button-primary:hover {
+            background: var(--fresh);
+            border-color: var(--fresh);
+            transform: translateY(-2px);
+        }
+
+        .button-secondary {
+            background: #fff;
+            color: var(--green);
+            border: 1px solid #cddfce;
+        }
+
+        .button-secondary:hover {
+            background: var(--pale);
+            transform: translateY(-2px);
+        }
+
+        .note {
+            max-width: 780px;
+            margin: 30px auto 0;
+            padding: 16px 20px;
+            background: #f5f7f2;
+            border: 1px solid #e8ede3;
+            border-radius: 15px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            padding: 25px 15px 30px;
+            border-top: 1px solid var(--border);
+            margin-top: 45px;
+        }
+
+        @media (max-width: 760px) {
+            header {
+                width: calc(100% - 20px);
+                padding: 15px;
+                border-radius: 23px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            nav {
+                gap: 3px;
+            }
+
+            nav a {
+                font-size: 12px;
+                padding: 9px;
+            }
+
+            .container {
+                margin: 32px auto;
+                padding: 0 15px;
+            }
+
+            .comparison,
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card,
+            .progress-card {
+                padding: 19px;
+                border-radius: 21px;
+            }
+
+            .photo-frame {
+                height: 300px;
+            }
+
+            .card-heading {
+                margin-bottom: 16px;
+            }
+
+            h2 {
+                font-size: 23px;
+            }
+
+            .good,
+            .warning {
+                padding: 18px;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .photo-frame {
+                height: 240px;
+            }
+
+            .card-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        /* Fixed SkinCare AI logo watermark */
+        .fixed-logo-watermark {
+            position: fixed;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: min(360px, 72vw);
+            aspect-ratio: 1 / 1;
+
+            background-image: url("/static/skincare-logo.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Keep cart content above the logo */
+        header,
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Let the subtle watermark show through cart panels */
+        .cart-items,
+        .summary,
+        .empty {
+            background: rgba(255, 255, 255, 0.91);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 760px) {
+            .fixed-logo-watermark {
+                width: min(260px, 72vw);
+                opacity: 0.04;
+            }
+        }
+
+        /* SkinCare AI navbar logo */
+        .logo,
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fixed-logo-watermark" aria-hidden="true"></div>
+    <header>
+        <div class="logo">
+            <img class="brand-logo" src="{{ url_for('static', filename='skincare-logo.png') }}" alt="SkinCare AI logo">
+            SkinCare <span style="color:#438e68;">AI</span>
+        </div>
+
+        <nav>
+            <a href="/">Home</a>
+            <a href="/analysis">Analysis</a>
+            <a href="/shop">Shop</a>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <section class="page-heading">
+            <div class="eyebrow">Your skincare journey</div>
+            <h1>Skin Progress Comparison</h1>
+            <p class="subtitle">
+                Compare your previous and current photos and review the visible changes.
+            </p>
+        </section>
+
+        <section class="comparison">
+
+            <article class="card">
+                <div class="card-heading">
+                    <h2>Before</h2>
+                    <span class="photo-label">Previous Photo</span>
+                </div>
+
+                <div class="photo-frame">
+                    <img src="{{ before_image }}" alt="Previous skin photo">
+                </div>
+
+                <div class="section-title">Possible Skin Type</div>
+                <p class="skin-type">{{ before_result.skin_type }}</p>
+
+                <div class="section-title">Visible Concerns</div>
+                {% if before_result.concerns %}
+                <ul class="concern-list">
+                    {% for concern in before_result.concerns %}
+                    <li>{{ concern }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="no-concerns">No concerns were listed for this photo.</p>
+                {% endif %}
+            </article>
+
+            <article class="card">
+                <div class="card-heading">
+                    <h2>After</h2>
+                    <span class="photo-label">Current Photo</span>
+                </div>
+
+                <div class="photo-frame">
+                    <img src="{{ after_image }}" alt="Current skin photo">
+                </div>
+
+                <div class="section-title">Possible Skin Type</div>
+                <p class="skin-type">{{ after_result.skin_type }}</p>
+
+                <div class="section-title">Visible Concerns</div>
+                {% if after_result.concerns %}
+                <ul class="concern-list">
+                    {% for concern in after_result.concerns %}
+                    <li>{{ concern }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="no-concerns">No concerns were listed for this photo.</p>
+                {% endif %}
+            </article>
+
+        </section>
+
+        <section class="progress-card">
+            <div class="summary-heading">
+                <h2>✦ Progress Summary</h2>
+                <p>Review the differences reported by the image analysis.</p>
+            </div>
+
+            <div class="summary-grid">
+
+                <div class="good">
+                    <h3>✓ Concerns Not Detected in Current Photo</h3>
+
+                    {% if improved %}
+                    <ul class="summary-list">
+                        {% for concern in improved %}
+                        <li>{{ concern }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="summary-empty">No clear change detected.</p>
+                    {% endif %}
+                </div>
+
+                <div class="warning">
+                    <h3>! Newly Detected Concerns</h3>
+
+                    {% if new_concerns %}
+                    <ul class="summary-list">
+                        {% for concern in new_concerns %}
+                        <li>{{ concern }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="summary-empty">No new visible concerns detected.</p>
+                    {% endif %}
+                </div>
+
+            </div>
+        </section>
+
+        <div class="actions">
+            <a class="button button-primary" href="/progress">
+                Compare Another Photo →
+            </a>
+
+            <a class="button button-secondary" href="/shop">
+                Explore Products
+            </a>
+
+            <a class="button button-secondary" href="/">
+                Back to Home
+            </a>
+        </div>
+
+        <p class="note">
+            This comparison is based on AI image analysis. Lighting, camera angle,
+            facial expression, and image quality may affect the results.
+            It is not a medical diagnosis, and a detected difference does not
+            necessarily mean a skin condition has improved or worsened.
+        </p>
+
+    </main>
+
+    <footer>
+        © 2026 SkinCare AI · Your Skin, Your Natural Glow
+    </footer>
+
+</body>
+
+</html>
